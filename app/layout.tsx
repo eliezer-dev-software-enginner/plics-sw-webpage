@@ -20,6 +20,14 @@ export const metadata: Metadata = {
   applicationName: 'Plics-SW',
   keywords:
     'plics, pliqs, plics-sw, erp, erp offline, erp sem internet, controle de estoque, sistema para gerenciar negócio, sistema de computador para pequenos negócios',
+  openGraph: {
+    type: 'website',
+    url: 'https://plics-sw-webpage.vercel.app',
+    title: 'Plics-SW',
+    description: 'Sistema ERP completo e totalmente offline',
+    siteName: 'Plics-SW',
+    // images: [{ url: 'https://example.com/og.png' }],
+  },
 };
 
 export default function RootLayout({
