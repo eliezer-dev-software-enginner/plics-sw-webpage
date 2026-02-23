@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: 'https://plics-sw-webpage.vercel.app',
-    title: 'Plics-SW',
+    title: 'Plics-SW Sistema ERP completo para pequenos negócios',
     description: 'Sistema ERP completo e totalmente offline',
     siteName: 'Plics-SW',
     // images: [{ url: 'https://example.com/og.png' }],

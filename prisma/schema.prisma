@@ -1,0 +1,27 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Payment {
+  id        String   @id
+  userId    String   @map("user_id")
+  status    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("payments")
+}
+
+model UserPurchase {
+  id         Int      @id @default(autoincrement())
+  userId     String   @map("user_id")
+  paymentId  String?  @map("payment_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("user_purchases")
+}
