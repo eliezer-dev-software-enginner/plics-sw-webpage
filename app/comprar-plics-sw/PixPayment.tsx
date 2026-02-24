@@ -1,7 +1,9 @@
 'use client';
 
-import { Copy, CheckCircle } from 'lucide-react';
+import { CheckCircle, Copy } from 'lucide-react';
+
 import styles from '@/app/styles/PixPayment.module.css';
+import { toast } from 'react-toastify';
 
 interface PixData {
   success: boolean;
@@ -16,6 +18,11 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
   const handleCopyPixKey = () => {
     if (pixData.qrCode) {
       navigator.clipboard.writeText(pixData.qrCode);
+
+      toast.success('✅ Chave Pix copiada com sucesso!', {
+        position: 'bottom-center',
+        autoClose: 2000,
+      });
     }
   };
 
@@ -23,9 +30,7 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
     return (
       <div className={styles.errorContainer}>
         <div className={styles.errorContent}>
-          <h1 className={styles.errorTitle}>
-            Erro ao gerar pagamento
-          </h1>
+          <h1 className={styles.errorTitle}>Erro ao gerar pagamento</h1>
           <p className={styles.errorMessage}>{pixData.error}</p>
         </div>
       </div>
@@ -34,20 +39,15 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
 
   return (
     <div className={styles.card}>
-      <p className={styles.label}>
-        Escaneie o QR Code para pagar:
-      </p>
+      <p className={styles.label}>Escaneie o QR Code para pagar:</p>
 
       <img
         src={`data:image/png;base64,${pixData.qrCodeBase64}`}
-        alt="PIX QR Code"
+        alt='PIX QR Code'
         className={styles.qrCode}
       />
 
-      <button
-        onClick={handleCopyPixKey}
-        className={styles.button}
-      >
+      <button onClick={handleCopyPixKey} className={styles.button}>
         <Copy className={styles.icon} />
         Copiar Chave PIX
       </button>
@@ -61,9 +61,7 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
       </div>
 
       {pixData.paymentId && (
-        <p className={styles.paymentId}>
-          ID: {pixData.paymentId}
-        </p>
+        <p className={styles.paymentId}>ID: {pixData.paymentId}</p>
       )}
     </div>
   );

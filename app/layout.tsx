@@ -1,8 +1,10 @@
 import './globals.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import type { Metadata } from 'next';
+import { ToastContainer } from 'react-toastify';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -40,6 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <ToastContainer />
         <footer
           style={{
             width: '100%',
@@ -54,11 +57,11 @@ export default function RootLayout({
           {process.env.SUPORTE_CONTATO && (
             <p style={{ marginTop: '0.5rem' }}>
               Suporte:{' '}
-              <a 
-                href={process.env.SUPORTE_CONTATO} 
+              <a
+                href={process.env.SUPORTE_CONTATO}
                 style={{ color: 'var(--accent)' }}
-                target="_blank"
-                rel="noopener noreferrer"
+                target='_blank'
+                rel='noopener noreferrer'
               >
                 Clique aqui
               </a>
