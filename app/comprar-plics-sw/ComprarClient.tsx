@@ -5,7 +5,7 @@ import PixPayment from './PixPayment';
 import styles from '@/app/styles/comprar.module.css';
 import { CheckCircle, Copy, Download, HeadphonesIcon } from 'lucide-react';
 import Link from 'next/link';
-import { getUserId } from '@/app/lib/userId';
+import { getUserId, setUserId } from '@/app/lib/userId';
 import { useEffect, useState } from 'react';
 
 interface AccessData {
@@ -24,7 +24,7 @@ interface PixData {
   error?: string;
 }
 
-export default function ComprarClient({ testMode, initialPaymentId }: { testMode?: boolean; initialPaymentId?: string }) {
+export default function ComprarClient({ testMode, initialPaymentId, userIdFromUrl }: { testMode?: boolean; initialPaymentId?: string; userIdFromUrl?: string }) {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
   const [accessData, setAccessData] = useState<AccessData | null>(null);
@@ -33,8 +33,16 @@ export default function ComprarClient({ testMode, initialPaymentId }: { testMode
 
   useEffect(() => {
     async function checkAccess() {
-      const userId = getUserId();
+      let userId = userIdFromUrl || getUserId();
       
+      if (!userId) {
+        userId = getUserId();
+      }
+
+      if (userIdFromUrl && userIdFromUrl !== getUserId()) {
+        setUserId(userIdFromUrl);
+      }
+
       if (testMode && userId) {
         await grantTestAccess(userId);
       }

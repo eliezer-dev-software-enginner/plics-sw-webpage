@@ -9,6 +9,7 @@ export default async function Comprar({
 }) {
   const params = await searchParams;
   const testMode = params.test === 'success';
+  const userIdFromUrl = params.userId;
 
-  return <ComprarClient testMode={testMode} />;
+  return <ComprarClient testMode={testMode} userIdFromUrl={userIdFromUrl} />;
 }
