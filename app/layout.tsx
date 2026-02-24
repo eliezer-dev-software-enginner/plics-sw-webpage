@@ -26,7 +26,6 @@ export const metadata: Metadata = {
     title: 'Plics-SW Sistema ERP completo para pequenos negócios',
     description: 'Sistema ERP completo e totalmente offline',
     siteName: 'Plics-SW',
-    // images: [{ url: 'https://example.com/og.png' }],
   },
 };
 
@@ -41,6 +40,31 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <footer
+          style={{
+            width: '100%',
+            backgroundColor: 'var(--text-main)',
+            color: 'white',
+            padding: '1.5rem',
+            textAlign: 'center',
+            fontSize: '0.875rem',
+          }}
+        >
+          <p>&copy; 2026 PLICS. Todos os direitos reservados.</p>
+          {process.env.SUPORTE_CONTATO && (
+            <p style={{ marginTop: '0.5rem' }}>
+              Suporte:{' '}
+              <a 
+                href={process.env.SUPORTE_CONTATO} 
+                style={{ color: 'var(--accent)' }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Clique aqui
+              </a>
+            </p>
+          )}
+        </footer>
       </body>
     </html>
   );

@@ -8,12 +8,7 @@ import {
 
 import Image from 'next/image';
 import style from '@/app/styles/Home.module.css';
-
-/**
- * Nota: Como estamos em um ambiente de arquivo único, simulei a lógica de CSS Modules
- * usando um objeto de estilos e classes CSS injetadas.
- * Em um projeto Next.js real, você moveria o conteúdo da tag <style> para 'Home.module.css'.
- */
+import { ComprarButton } from '@/app/components/ComprarButton';
 
 export default function App() {
   return (
@@ -27,9 +22,7 @@ export default function App() {
             das suas vendas, estoque e financeiro sem depender de internet ou
             mensalidades abusivas.
           </h2>
-          <button className={style.cta_button}>
-            Começar Agora <ArrowRight size={20} />
-          </button>
+          <ComprarButton variant="primary" />
 
           <div className={style.dashboard_preview}>
             <Image
@@ -88,25 +81,9 @@ export default function App() {
             <p className={style.price_info}>
               Sem taxas escondidas. Licença vitalícia.
             </p>
-            <button
-              className={style.cta_button}
-              style={{ backgroundColor: 'var(--accent)', color: '#000' }}
-            >
-              <ShoppingCart size={20} /> Comprar Já
-            </button>
+            <ComprarButton variant="accent" />
           </div>
         </section>
-
-        <footer
-          style={{
-            padding: '40px',
-            textAlign: 'center',
-            color: '#9ca3af',
-            fontSize: '0.9rem',
-          }}
-        >
-          © {new Date().getFullYear()} Plics-SW - Gestão para Pequenos Negócios.
-        </footer>
       </main>
     </div>
   );
