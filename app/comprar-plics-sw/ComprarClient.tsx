@@ -67,14 +67,8 @@ export default function ComprarClient({ testMode, initialPaymentId }: { testMode
     const result = await syncPaymentStatus(pixData.paymentId, userId || '');
     
     if (result.accessGranted) {
-      const accessResult = await checkUserHasAccess(userId || '');
-      setHasAccess(accessResult.hasAccess);
-      setAccessData({
-        hasAccess: accessResult.hasAccess,
-        license: accessResult.license || null,
-        downloadWindows: accessResult.downloadWindows || null,
-        downloadLinux: accessResult.downloadLinux || null,
-      });
+      window.location.reload();
+      return;
     }
     
     setCheckingPayment(false);
