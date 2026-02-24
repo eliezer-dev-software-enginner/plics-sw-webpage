@@ -13,7 +13,7 @@ export async function createPixPayment(userId: string) {
 
     const response = await payment.create({
       body: {
-        transaction_amount: 1.0,
+        transaction_amount: 54.5,
         description: 'PLICs - Licença de Uso do Aplicativo',
         payment_method_id: 'pix',
         payer: {
@@ -73,7 +73,7 @@ export async function checkPaymentStatus(paymentId: string) {
 
 export async function syncPaymentStatus(paymentId: string, userId: string) {
   'use server';
-  
+
   try {
     const payment = new Payment(client);
     const result = await payment.get({ id: paymentId });
