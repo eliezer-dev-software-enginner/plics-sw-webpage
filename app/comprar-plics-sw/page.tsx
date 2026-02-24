@@ -1,5 +1,6 @@
 import { createPixPayment } from './actions';
 import PixPayment from './PixPayment';
+import styles from '@/app/styles/comprar.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,23 +14,23 @@ export default async function Comprar() {
   const pixData = await getPixData();
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>
             Realize já a compra do seu aplicativo
           </h1>
-          <h2 className="text-xl text-gray-400">
+          <h2 className={styles.subtitle}>
             Você recebe a licença na hora junto com o aplicativo
           </h2>
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className={styles.wrapper}>
           <PixPayment pixData={pixData} />
         </div>
       </div>
 
-      <footer className="w-full bg-gray-950 text-white py-6 px-6 text-center text-sm">
+      <footer className={styles.footer}>
         <p>&copy; 202 PLICs. Todos os direitos reservados.</p>
       </footer>
     </div>

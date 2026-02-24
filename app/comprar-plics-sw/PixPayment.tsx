@@ -1,6 +1,7 @@
 'use client';
 
 import { Copy, CheckCircle } from 'lucide-react';
+import styles from '@/app/styles/PixPayment.module.css';
 
 interface PixData {
   success: boolean;
@@ -20,47 +21,47 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
 
   if (!pixData.success) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-        <div className="text-center p-8">
-          <h1 className="text-2xl font-bold text-red-500 mb-4">
+      <div className={styles.errorContainer}>
+        <div className={styles.errorContent}>
+          <h1 className={styles.errorTitle}>
             Erro ao gerar pagamento
           </h1>
-          <p className="text-gray-400">{pixData.error}</p>
+          <p className={styles.errorMessage}>{pixData.error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center mt-6 bg-gray-800 p-8 rounded-2xl shadow-xl">
-      <p className="mb-4 font-semibold text-gray-300">
+    <div className={styles.card}>
+      <p className={styles.label}>
         Escaneie o QR Code para pagar:
       </p>
 
       <img
         src={`data:image/png;base64,${pixData.qrCodeBase64}`}
         alt="PIX QR Code"
-        className="w-64 h-64 mb-4 bg-white p-2 rounded-lg"
+        className={styles.qrCode}
       />
 
       <button
         onClick={handleCopyPixKey}
-        className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-bold rounded-lg shadow-md transform hover:scale-105 transition-all duration-300 mb-4"
+        className={styles.button}
       >
-        <Copy className="w-5 h-5" />
+        <Copy className={styles.icon} />
         Copiar Chave PIX
       </button>
 
-      <div className="flex items-center gap-2 text-sm text-gray-400">
+      <div className={styles.status}>
         <span>Status:</span>
-        <span className="text-yellow-400 font-semibold flex items-center gap-1">
-          <CheckCircle className="w-4 h-4" />
+        <span className={styles.statusText}>
+          <CheckCircle className={styles.iconSmall} />
           {pixData.status}
         </span>
       </div>
 
       {pixData.paymentId && (
-        <p className="text-xs text-gray-500 mt-2">
+        <p className={styles.paymentId}>
           ID: {pixData.paymentId}
         </p>
       )}

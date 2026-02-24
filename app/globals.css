@@ -15,6 +15,9 @@
   --text-main: #1f2937;
   --text-muted: #4b5563;
   --bg-light: #f9fafb;
+  --success: #22c55e;
+  --warning: #fbbf24;
+  --error: #ef4444;
 }
 
 body {
