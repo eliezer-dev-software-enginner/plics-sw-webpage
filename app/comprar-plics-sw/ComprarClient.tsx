@@ -1,6 +1,6 @@
 'use client';
 
-import { checkUserHasAccess, createPixPayment, grantTestAccess } from './actions';
+import { checkUserHasAccess, createPixPayment, grantTestAccess, syncPaymentStatus } from './actions';
 import PixPayment from './PixPayment';
 import styles from '@/app/styles/comprar.module.css';
 import { CheckCircle, Copy, Download, HeadphonesIcon } from 'lucide-react';
@@ -24,11 +24,12 @@ interface PixData {
   error?: string;
 }
 
-export default function ComprarClient({ testMode }: { testMode?: boolean }) {
+export default function ComprarClient({ testMode, initialPaymentId }: { testMode?: boolean; initialPaymentId?: string }) {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
   const [accessData, setAccessData] = useState<AccessData | null>(null);
   const [pixData, setPixData] = useState<PixData | null>(null);
+  const [checkingPayment, setCheckingPayment] = useState(false);
 
   useEffect(() => {
     async function checkAccess() {
@@ -56,7 +57,28 @@ export default function ComprarClient({ testMode }: { testMode?: boolean }) {
     }
 
     checkAccess();
-  }, [testMode]);
+  }, [testMode, initialPaymentId]);
+
+  const handleCheckPayment = async () => {
+    if (!pixData?.paymentId) return;
+    
+    setCheckingPayment(true);
+    const userId = getUserId();
+    const result = await syncPaymentStatus(pixData.paymentId, userId || '');
+    
+    if (result.accessGranted) {
+      const accessResult = await checkUserHasAccess(userId || '');
+      setHasAccess(accessResult.hasAccess);
+      setAccessData({
+        hasAccess: accessResult.hasAccess,
+        license: accessResult.license || null,
+        downloadWindows: accessResult.downloadWindows || null,
+        downloadLinux: accessResult.downloadLinux || null,
+      });
+    }
+    
+    setCheckingPayment(false);
+  };
 
   if (loading) {
     return (
@@ -185,6 +207,16 @@ export default function ComprarClient({ testMode }: { testMode?: boolean }) {
 
         <div className={styles.wrapper}>
           {pixData && <PixPayment pixData={pixData} />}
+          
+          {pixData?.paymentId && (
+            <button 
+              onClick={handleCheckPayment}
+              disabled={checkingPayment}
+              style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}
+            >
+              {checkingPayment ? 'Verificando...' : 'Já paguei! Verificar pagamento'}
+            </button>
+          )}
         </div>
       </div>
     </div>

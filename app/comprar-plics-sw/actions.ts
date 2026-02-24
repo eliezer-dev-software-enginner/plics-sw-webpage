@@ -71,6 +71,26 @@ export async function checkPaymentStatus(paymentId: string) {
   }
 }
 
+export async function syncPaymentStatus(paymentId: string, userId: string) {
+  'use server';
+  
+  try {
+    const payment = new Payment(client);
+    const result = await payment.get({ id: paymentId });
+    const status = result.status;
+
+    if (status === 'approved') {
+      await grantUserAccess(userId, paymentId);
+      return { success: true, status, accessGranted: true };
+    }
+
+    return { success: true, status, accessGranted: false };
+  } catch (error: any) {
+    console.error('Erro ao sincronizar pagamento:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function checkUserHasAccess(userId: string) {
   'use server';
 
