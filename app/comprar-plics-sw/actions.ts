@@ -1,3 +1,5 @@
+//app/comprar-plics-sw/actions.tsx
+
 'use server';
 
 import { getUserPurchases, grantUserAccess, savePayment } from '@/app/lib/db';

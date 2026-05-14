@@ -1,12 +1,14 @@
+//app/comprar-plics-sw/ComprarClient.tsx
+
 'use client';
 
-import { checkUserHasAccess, createPixPayment, grantTestAccess, syncPaymentStatus } from './actions';
-import PixPayment from './PixPayment';
+import { getUserId, setUserId } from '@/app/lib/userId';
 import styles from '@/app/styles/comprar.module.css';
 import { CheckCircle, Copy, Download, HeadphonesIcon } from 'lucide-react';
 import Link from 'next/link';
-import { getUserId, setUserId } from '@/app/lib/userId';
 import { useEffect, useState } from 'react';
+import { checkUserHasAccess, createPixPayment, grantTestAccess, syncPaymentStatus } from './actions';
+import PixPayment from './PixPayment';
 
 interface AccessData {
   hasAccess: boolean;
@@ -31,41 +33,74 @@ export default function ComprarClient({ testMode, initialPaymentId, userIdFromUr
   const [pixData, setPixData] = useState<PixData | null>(null);
   const [checkingPayment, setCheckingPayment] = useState(false);
 
-  useEffect(() => {
-    async function checkAccess() {
-      let userId = userIdFromUrl || getUserId();
-      
-      if (!userId) {
-        userId = getUserId();
-      }
+useEffect(() => {
+  async function checkAccess() {
+    let userId = userIdFromUrl || getUserId();
 
-      if (userIdFromUrl && userIdFromUrl !== getUserId()) {
-        setUserId(userIdFromUrl);
-      }
-
-      if (testMode && userId) {
-        await grantTestAccess(userId);
-      }
-
-      const result = await checkUserHasAccess(userId || '');
-      setHasAccess(result.hasAccess);
-      setAccessData({
-        hasAccess: result.hasAccess,
-        license: result.license || null,
-        downloadWindows: result.downloadWindows || null,
-        downloadLinux: result.downloadLinux || null,
-      });
-
-      if (!result.hasAccess) {
-        const pixResult = await createPixPayment(userId || 'guest_' + Date.now());
-        setPixData(pixResult);
-      }
-
-      setLoading(false);
+    if (!userId) {
+      userId = getUserId();
     }
 
-    checkAccess();
-  }, [testMode, initialPaymentId]);
+    if (userIdFromUrl && userIdFromUrl !== getUserId()) {
+      setUserId(userIdFromUrl);
+    }
+
+    if (testMode && userId) {
+      await grantTestAccess(userId);
+    }
+
+    const result = await checkUserHasAccess(userId || '');
+    setHasAccess(result.hasAccess);
+    setAccessData({
+      hasAccess: result.hasAccess,
+      license: result.license || null,
+      downloadWindows: result.downloadWindows || null,
+      downloadLinux: result.downloadLinux || null,
+    });
+
+    if (!result.hasAccess) {
+      if (initialPaymentId) {
+        setPixData({
+          success: true,
+          paymentId: initialPaymentId,
+          qrCodeBase64: null,
+          qrCode: null,
+          status: 'pending',
+        });
+      } else {
+        const pixResult = await createPixPayment(userId || 'guest_' + Date.now());
+        setPixData(pixResult);
+
+        // Atualiza a URL com o paymentId sem recarregar
+        if (pixResult.paymentId) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('paymentId', pixResult.paymentId);
+          window.history.replaceState({}, '', url.toString());
+        }
+      }
+    }
+
+    // if (!result.hasAccess) {
+    //   if (initialPaymentId) {
+    //     // Carrega o pagamento existente sem criar um novo
+    //     setPixData({
+    //       success: true,
+    //       paymentId: initialPaymentId,
+    //       qrCodeBase64: null,
+    //       qrCode: null,
+    //       status: 'pending',
+    //     });
+    //   } else {
+    //     const pixResult = await createPixPayment(userId || 'guest_' + Date.now());
+    //     setPixData(pixResult);
+    //   }
+    // }
+
+    setLoading(false);
+  }
+
+  checkAccess();
+}, [testMode, initialPaymentId, userIdFromUrl]); // userIdFromUrl adicionado às deps
 
   const handleCheckPayment = async () => {
     if (!pixData?.paymentId) return;

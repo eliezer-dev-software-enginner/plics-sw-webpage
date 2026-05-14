@@ -1,3 +1,5 @@
+//app/comprar-plics-sw/page.tsx
+
 import ComprarClient from './ComprarClient';
 
 export const dynamic = 'force-dynamic';
