@@ -3,11 +3,18 @@
 'use client';
 
 import { getUserId, setUserId } from '@/app/lib/userId';
-import styles from '@/app/styles/comprar.module.css';
-import { CheckCircle, Copy, Download, HeadphonesIcon } from 'lucide-react';
-import Link from 'next/link';
+import { CheckCircle, Copy, Download } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { checkUserHasAccess, createPixPayment, grantTestAccess, syncPaymentStatus } from './actions';
+import {
+  checkUserHasAccess,
+  createPixPayment,
+  grantTestAccess,
+  syncPaymentStatus,
+} from './actions';
+
+import styles from '@/app/styles/comprar.module.css';
+import Link from 'next/link';
+import FalarComSuporteComponent from '../components/FalarComSuporte';
 import PixPayment from './PixPayment';
 
 interface AccessData {
@@ -26,94 +33,104 @@ interface PixData {
   error?: string;
 }
 
-export default function ComprarClient({ testMode, initialPaymentId, userIdFromUrl }: { testMode?: boolean; initialPaymentId?: string; userIdFromUrl?: string }) {
+export default function ComprarClient({
+  testMode,
+  initialPaymentId,
+  userIdFromUrl,
+}: {
+  testMode?: boolean;
+  initialPaymentId?: string;
+  userIdFromUrl?: string;
+}) {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
   const [accessData, setAccessData] = useState<AccessData | null>(null);
   const [pixData, setPixData] = useState<PixData | null>(null);
   const [checkingPayment, setCheckingPayment] = useState(false);
 
-useEffect(() => {
-  async function checkAccess() {
-    let userId = userIdFromUrl || getUserId();
+  useEffect(() => {
+    async function checkAccess() {
+      let userId = userIdFromUrl || getUserId();
 
-    if (!userId) {
-      userId = getUserId();
-    }
+      if (!userId) {
+        userId = getUserId();
+      }
 
-    if (userIdFromUrl && userIdFromUrl !== getUserId()) {
-      setUserId(userIdFromUrl);
-    }
+      if (userIdFromUrl && userIdFromUrl !== getUserId()) {
+        setUserId(userIdFromUrl);
+      }
 
-    if (testMode && userId) {
-      await grantTestAccess(userId);
-    }
+      if (testMode && userId) {
+        await grantTestAccess(userId);
+      }
 
-    const result = await checkUserHasAccess(userId || '');
-    setHasAccess(result.hasAccess);
-    setAccessData({
-      hasAccess: result.hasAccess,
-      license: result.license || null,
-      downloadWindows: result.downloadWindows || null,
-      downloadLinux: result.downloadLinux || null,
-    });
+      const result = await checkUserHasAccess(userId || '');
+      setHasAccess(result.hasAccess);
+      setAccessData({
+        hasAccess: result.hasAccess,
+        license: result.license || null,
+        downloadWindows: result.downloadWindows || null,
+        downloadLinux: result.downloadLinux || null,
+      });
 
-    if (!result.hasAccess) {
-      if (initialPaymentId) {
-        setPixData({
-          success: true,
-          paymentId: initialPaymentId,
-          qrCodeBase64: null,
-          qrCode: null,
-          status: 'pending',
-        });
-      } else {
-        const pixResult = await createPixPayment(userId || 'guest_' + Date.now());
-        setPixData(pixResult);
+      if (!result.hasAccess) {
+        if (initialPaymentId) {
+          setPixData({
+            success: true,
+            paymentId: initialPaymentId,
+            qrCodeBase64: null,
+            qrCode: null,
+            status: 'pending',
+          });
+        } else {
+          const pixResult = await createPixPayment(
+            userId || 'guest_' + Date.now(),
+          );
+          setPixData(pixResult);
 
-        // Atualiza a URL com o paymentId sem recarregar
-        if (pixResult.paymentId) {
-          const url = new URL(window.location.href);
-          url.searchParams.set('paymentId', pixResult.paymentId);
-          window.history.replaceState({}, '', url.toString());
+          // Atualiza a URL com o paymentId sem recarregar
+          if (pixResult.paymentId) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('paymentId', pixResult.paymentId);
+            window.history.replaceState({}, '', url.toString());
+          }
         }
       }
+
+      // if (!result.hasAccess) {
+      //   if (initialPaymentId) {
+      //     // Carrega o pagamento existente sem criar um novo
+      //     setPixData({
+      //       success: true,
+      //       paymentId: initialPaymentId,
+      //       qrCodeBase64: null,
+      //       qrCode: null,
+      //       status: 'pending',
+      //     });
+      //   } else {
+      //     const pixResult = await createPixPayment(userId || 'guest_' + Date.now());
+      //     setPixData(pixResult);
+      //   }
+      // }
+
+      setLoading(false);
     }
 
-    // if (!result.hasAccess) {
-    //   if (initialPaymentId) {
-    //     // Carrega o pagamento existente sem criar um novo
-    //     setPixData({
-    //       success: true,
-    //       paymentId: initialPaymentId,
-    //       qrCodeBase64: null,
-    //       qrCode: null,
-    //       status: 'pending',
-    //     });
-    //   } else {
-    //     const pixResult = await createPixPayment(userId || 'guest_' + Date.now());
-    //     setPixData(pixResult);
-    //   }
-    // }
-
-    setLoading(false);
-  }
-
-  checkAccess();
-}, [testMode, initialPaymentId, userIdFromUrl]); // userIdFromUrl adicionado às deps
+    checkAccess();
+  }, [testMode, initialPaymentId, userIdFromUrl]); // userIdFromUrl adicionado às deps
 
   const handleCheckPayment = async () => {
     if (!pixData?.paymentId) return;
-    
+
     setCheckingPayment(true);
     const userId = getUserId();
     const result = await syncPaymentStatus(pixData.paymentId, userId || '');
-    
+
     if (result.accessGranted) {
       window.location.reload();
       return;
     }
-    
+
     setCheckingPayment(false);
   };
 
@@ -155,10 +172,13 @@ useEffect(() => {
               </div>
               <div className={styles.licenseBox}>
                 <code className={styles.license}>{accessData.license}</code>
-                <button 
-                  className={styles.copyBtn} 
+                <button
+                  className={styles.copyBtn}
                   title='Copiar licença'
-                  onClick={() => accessData.license && navigator.clipboard.writeText(accessData.license)}
+                  onClick={() =>
+                    accessData.license &&
+                    navigator.clipboard.writeText(accessData.license)
+                  }
                 >
                   <Copy size={16} />
                 </button>
@@ -206,19 +226,7 @@ useEffect(() => {
               </div>
             </div>
 
-            {process.env.NEXT_PUBLIC_SUPORTE_CONTATO && (
-              <div className={styles.suporte}>
-                <HeadphonesIcon size={18} className={styles.suporteIcon} />
-                <span className={styles.suporteText}>Precisa de ajuda?</span>
-                <Link
-                  href={process.env.NEXT_PUBLIC_SUPORTE_CONTATO}
-                  className={styles.suporteLink}
-                  target='_blank'
-                >
-                  Falar com suporte
-                </Link>
-              </div>
-            )}
+            <FalarComSuporteComponent />
           </div>
         </div>
       </div>
@@ -244,16 +252,20 @@ useEffect(() => {
 
         <div className={styles.wrapper}>
           {pixData && <PixPayment pixData={pixData} />}
-          
+
           {pixData?.paymentId && (
-            <button 
+            <button
               onClick={handleCheckPayment}
               disabled={checkingPayment}
               style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}
             >
-              {checkingPayment ? 'Verificando...' : 'Já paguei! Verificar pagamento'}
+              {checkingPayment
+                ? 'Verificando...'
+                : 'Já paguei! Verificar pagamento'}
             </button>
           )}
+
+          <FalarComSuporteComponent />
         </div>
       </div>
     </div>
