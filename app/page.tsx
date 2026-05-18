@@ -143,7 +143,8 @@ export default function App() {
                   <CheckCircle size={16} /> Atualizações gratuitas
                 </li>
                 <li>
-                  <CheckCircle size={16} /> Suporte por 6 meses
+                  <CheckCircle size={16} /> Suporte vitalício via WhatsApp e
+                  Telegram
                 </li>
                 <li>
                   <CheckCircle size={16} /> Windows &amp; Linux
