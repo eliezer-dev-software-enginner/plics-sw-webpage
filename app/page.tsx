@@ -1,19 +1,20 @@
-import { CheckCircle, Shield, WifiOff } from 'lucide-react';
+import { CheckCircle, Shield, WifiOff } from "lucide-react";
 
-import { ComprarButton } from '@/app/components/ComprarButton';
-import Image from 'next/image';
-import style from '@/app/styles/Home.module.css';
+import { ComprarButton } from "@/app/components/ComprarButton";
+import Image from "next/image";
+import style from "@/app/styles/Home.module.css";
+import { SuporteButton } from "./components/SuporteButton";
 
 export default function App() {
   return (
     <div className={style.container}>
       {/* Grain overlay */}
-      <div className={style.grain} aria-hidden='true' />
+      <div className={style.grain} aria-hidden="true" />
 
       <main>
         {/* ── Hero ─────────────────────────────────── */}
         <section className={style.hero}>
-          <div className={style.heroBg} aria-hidden='true'>
+          <div className={style.heroBg} aria-hidden="true">
             <div className={style.heroBgGlow} />
             <div className={style.heroBgGrid} />
           </div>
@@ -39,7 +40,8 @@ export default function App() {
             </p>
 
             <div className={style.heroCta}>
-              <ComprarButton variant='primary' />
+              <ComprarButton variant="primary" />
+              <SuporteButton />
               <div className={style.heroMeta}>
                 <span>✓ Entrega imediata</span>
                 <span>✓ Licença vitalícia</span>
@@ -55,15 +57,15 @@ export default function App() {
                   <span />
                 </div>
                 <Image
-                  src='/plics-sw-home.png'
+                  src="/plics-sw-home.png"
                   width={1000}
                   height={560}
-                  alt='Interface do Sistema Plics-SW Dashboard'
+                  alt="Interface do Sistema Plics-SW Dashboard"
                   className={style.dashboardImg}
                   priority
                 />
               </div>
-              <div className={style.dashboardGlow} aria-hidden='true' />
+              <div className={style.dashboardGlow} aria-hidden="true" />
             </div>
           </div>
         </section>
@@ -101,7 +103,7 @@ export default function App() {
                   Esqueça assinaturas e cobranças mensais. Você paga uma vez e o
                   sistema é seu para sempre — sem pegadinha.
                 </p>
-                <div className={style.featureCardGlow} aria-hidden='true' />
+                <div className={style.featureCardGlow} aria-hidden="true" />
               </div>
 
               <div className={style.featureCard}>
@@ -120,7 +122,7 @@ export default function App() {
 
         {/* ── Preço ────────────────────────────────── */}
         <section className={style.pricing}>
-          <div className={style.pricingBg} aria-hidden='true' />
+          <div className={style.pricingBg} aria-hidden="true" />
           <div className={style.pricingInner}>
             <div className={style.pricingLeft}>
               <div className={style.pricingLabel}>Oferta de lançamento</div>
@@ -158,12 +160,12 @@ export default function App() {
                   <span className={style.cents}>,50</span>
                 </div>
                 <p className={style.priceNote}>pagamento único · via PIX</p>
-                <ComprarButton variant='accent' />
+                <ComprarButton variant="accent" />
                 <p className={style.priceSecurity}>
                   🔒 Pagamento seguro · Licença entregue na hora
                 </p>
               </div>
-              <div className={style.pricingCardGlow} aria-hidden='true' />
+              <div className={style.pricingCardGlow} aria-hidden="true" />
             </div>
           </div>
         </section>
