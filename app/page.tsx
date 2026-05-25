@@ -120,6 +120,29 @@ export default function App() {
           </div>
         </section>
 
+        {/* ── Versatilidade ────────────────────────────── */}
+        <section className={style.versatilidade}>
+          <div className={style.versatilidadeInner}>
+            <h2 className={style.versatilidadeTitle}>
+              Sistema PDV completo para o seu segmento
+            </h2>
+            <p className={style.versatilidadeText}>
+              Bares, Floriculturas, Barbearias, Lojas de roupa, Mercearia, o que
+              você imaginar. Atendemos todos os segmentos do varejo, comércio e
+              serviços! E amamos receber os pequenos e novos negócios.
+            </p>
+
+            <Image
+              src="/mulher-usando-pdv.png"
+              width={1000}
+              height={560}
+              alt="Interface do Sistema Plics-SW Dashboard"
+              className={style.dashboardImg}
+              priority
+            />
+          </div>
+        </section>
+
         {/* ── Preço ────────────────────────────────── */}
         <section className={style.pricing}>
           <div className={style.pricingBg} aria-hidden="true" />
