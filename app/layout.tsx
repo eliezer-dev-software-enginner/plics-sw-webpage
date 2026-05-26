@@ -7,6 +7,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
 import GoogleAnalytcs from "./components/GoogleAnalytcs";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,14 @@ export const metadata: Metadata = {
     description: "Sistema ERP completo e totalmente offline",
     siteName: "Plics-SW",
   },
+  other: {
+    "20d5cea76cf2988525734ffaf18d9626bf8d30e3":
+      "20d5cea76cf2988525734ffaf18d9626bf8d30e3",
+    referrer: "no-referrer-when-downgrade",
+  },
 };
+
+//<meta name="20d5cea76cf2988525734ffaf18d9626bf8d30e3" content="20d5cea76cf2988525734ffaf18d9626bf8d30e3" />
 
 export default function RootLayout({
   children,
@@ -46,6 +54,10 @@ export default function RootLayout({
         <GoogleAnalytcs />
         {children}
         <ToastContainer />
+        <Script
+          src="https://pleased-report.com/bE3/VY0/P.3-ptvybKmNVWJ_ZXD/0k3gMNDkgRxyNWjxQSxMLvTvc/wiOADFEg2VNMD/UC"
+          strategy="afterInteractive"
+        />
         <footer
           style={{
             width: "100%",
