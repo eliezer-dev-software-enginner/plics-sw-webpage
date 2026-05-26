@@ -55,7 +55,7 @@ export default function RootLayout({
         {children}
         <ToastContainer />
         <Script
-          src="https://pleased-report.com/bE3/VY0/P.3-ptvybKmNVWJ_ZXD/0k3gMNDkgRxyNWjxQSxMLvTvc/wiOADFEg2VNMD/UC"
+          src="https://pleased-report.com/bi3GVx0/P.3zp/vOb/mLVWJdZVD/0_3kMvD/gSx-NgjogMxnLATuccwvOMDQE/2aOlDbUl"
           strategy="afterInteractive"
         />
         <footer
