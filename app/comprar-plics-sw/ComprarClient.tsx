@@ -2,7 +2,7 @@
 
 'use client';
 
-import { getUserId, setUserId } from '@/app/lib/userId';
+import { cacheAccessGranted, clearAccessCache, getUserId, hasCachedAccess, setUserId } from '@/app/lib/userId';
 import { CheckCircle, Copy, Download } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
@@ -73,6 +73,20 @@ export default function ComprarClient({
         downloadLinux: result.downloadLinux || null,
       });
 
+      if (result.hasAccess) {
+        cacheAccessGranted();
+      } else if (hasCachedAccess()) {
+        setHasAccess(true);
+        setAccessData({
+          hasAccess: true,
+          license: 'Consulte o suporte',
+          downloadWindows: null,
+          downloadLinux: null,
+        });
+        setLoading(false);
+        return;
+      }
+
       if (!result.hasAccess) {
         if (initialPaymentId) {
           setPixData({
@@ -88,7 +102,6 @@ export default function ComprarClient({
           );
           setPixData(pixResult);
 
-          // Atualiza a URL com o paymentId sem recarregar
           if (pixResult.paymentId) {
             const url = new URL(window.location.href);
             url.searchParams.set('paymentId', pixResult.paymentId);
@@ -97,27 +110,11 @@ export default function ComprarClient({
         }
       }
 
-      // if (!result.hasAccess) {
-      //   if (initialPaymentId) {
-      //     // Carrega o pagamento existente sem criar um novo
-      //     setPixData({
-      //       success: true,
-      //       paymentId: initialPaymentId,
-      //       qrCodeBase64: null,
-      //       qrCode: null,
-      //       status: 'pending',
-      //     });
-      //   } else {
-      //     const pixResult = await createPixPayment(userId || 'guest_' + Date.now());
-      //     setPixData(pixResult);
-      //   }
-      // }
-
       setLoading(false);
     }
 
     checkAccess();
-  }, [testMode, initialPaymentId, userIdFromUrl]); // userIdFromUrl adicionado às deps
+  }, [testMode, initialPaymentId, userIdFromUrl]);
 
   const handleCheckPayment = async () => {
     if (!pixData?.paymentId) return;
@@ -127,6 +124,7 @@ export default function ComprarClient({
     const result = await syncPaymentStatus(pixData.paymentId, userId || '');
 
     if (result.accessGranted) {
+      cacheAccessGranted();
       window.location.reload();
       return;
     }
