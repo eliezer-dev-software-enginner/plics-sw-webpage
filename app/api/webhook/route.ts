@@ -1,7 +1,5 @@
 import { getPayment, grantUserAccess, updatePaymentStatus } from "@/app/lib/db";
-import { getMpClient } from "@/app/lib/mercadoPago";
-
-import { Payment } from "mercadopago";
+import { createPixService } from "@/app/lib/pixService";
 
 export const dynamic = "force-dynamic";
 
@@ -29,8 +27,8 @@ export async function POST(req: Request) {
       return Response.json({ received: true, test: true });
     }
 
-    const payment = new Payment(getMpClient());
-    const result = await payment.get({ id: paymentIdStr });
+    const pixService = createPixService();
+    const result = await pixService.getPayment(paymentIdStr);
 
     const novoStatus: string = result.status || "unknown";
 

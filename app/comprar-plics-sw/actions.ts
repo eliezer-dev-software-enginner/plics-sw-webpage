@@ -4,34 +4,23 @@
 
 import { getUserPurchases, grantUserAccess, savePayment } from "@/app/lib/db";
 
-import { Payment } from "mercadopago";
-import { getMpClient } from "../lib/mercadoPago";
+import { createPixService } from "@/app/lib/pixService";
 
 export async function createPixPayment(userId: string) {
   "use server";
 
   try {
-    const payment = new Payment(getMpClient());
-
-    const response = await payment.create({
-      body: {
-        transaction_amount: 54.5,
-        description: "PLICs - Licença de Uso do Aplicativo",
-        payment_method_id: "pix",
-        payer: {
-          email: process.env.EMAIL || "cliente@exemplo.com",
-          first_name: "Cliente",
-          last_name: "PLICs",
-        },
-        external_reference: userId,
-      },
+    const pixService = createPixService();
+    const response = await pixService.createPayment({
+      transactionAmount: 54.5,
+      description: "PLICs - Licença de Uso do Aplicativo",
+      payerEmail: process.env.EMAIL || "cliente@exemplo.com",
+      payerFirstName: "Cliente",
+      payerLastName: "PLICs",
+      externalReference: userId,
     });
 
-    const qrCodeBase64 =
-      response.point_of_interaction?.transaction_data?.qr_code_base64;
-    const qrCode = response.point_of_interaction?.transaction_data?.qr_code;
-    const paymentId = String(response.id);
-    const status = response.status || "pending";
+    const { id: paymentId, status, qrCodeBase64, qrCode } = response;
 
     if (paymentId && paymentId !== "undefined") {
       await savePayment(paymentId, userId, status);
@@ -42,7 +31,7 @@ export async function createPixPayment(userId: string) {
       paymentId,
       qrCodeBase64,
       qrCode,
-      status: response.status,
+      status,
     };
   } catch (error: any) {
     console.error("Erro ao criar pagamento PIX:", error);
@@ -57,8 +46,8 @@ export async function checkPaymentStatus(paymentId: string) {
   "use server";
 
   try {
-    const payment = new Payment(getMpClient());
-    const result = await payment.get({ id: paymentId });
+    const pixService = createPixService();
+    const result = await pixService.getPayment(paymentId);
 
     return {
       success: true,
@@ -77,8 +66,8 @@ export async function syncPaymentStatus(paymentId: string, userId: string) {
   "use server";
 
   try {
-    const payment = new Payment(getMpClient());
-    const result = await payment.get({ id: paymentId });
+    const pixService = createPixService();
+    const result = await pixService.getPayment(paymentId);
     const status = result.status;
 
     if (status === "approved") {
