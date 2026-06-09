@@ -92,13 +92,27 @@ export default function ComprarClient({
             return;
           }
 
-          setPixData({
-            success: true,
-            paymentId: initialPaymentId,
-            qrCodeBase64: syncResult.qrCodeBase64 ?? null,
-            qrCode: syncResult.qrCode ?? null,
-            status: syncResult.status || 'pending',
-          });
+          if (syncResult.isExpired) {
+            const pixResult = await createPixPayment(
+              userId || 'guest_' + Date.now(),
+            );
+            setPixData(pixResult);
+
+            if (pixResult.paymentId) {
+              savePaymentId(pixResult.paymentId);
+              const url = new URL(window.location.href);
+              url.searchParams.set('paymentId', pixResult.paymentId);
+              window.history.replaceState({}, '', url.toString());
+            }
+          } else {
+            setPixData({
+              success: true,
+              paymentId: initialPaymentId,
+              qrCodeBase64: syncResult.qrCodeBase64 ?? null,
+              qrCode: syncResult.qrCode ?? null,
+              status: syncResult.status || 'pending',
+            });
+          }
         } else {
           const pixResult = await createPixPayment(
             userId || 'guest_' + Date.now(),

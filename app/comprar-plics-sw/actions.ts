@@ -78,12 +78,15 @@ export async function syncPaymentStatus(paymentId: string, userId: string) {
       return { success: true, status, accessGranted: true };
     }
 
+    const isExpired = status !== "pending" && status !== "in_process";
+
     return {
       success: true,
       status,
       accessGranted: false,
-      qrCodeBase64: transactionData?.qr_code_base64 ?? null,
-      qrCode: transactionData?.qr_code ?? null,
+      isExpired,
+      qrCodeBase64: isExpired ? null : (transactionData?.qr_code_base64 ?? null),
+      qrCode: isExpired ? null : (transactionData?.qr_code ?? null),
     };
   } catch (error: any) {
     console.error("Erro ao sincronizar pagamento:", error);
