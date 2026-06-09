@@ -6,7 +6,7 @@
 **Status:** Implementado
 
 ### Decisão
-Integrar `pix-emulator-mercado-pago` como dependência local para ambiente de desenvolvimento, através de uma camada de abstração (`PixService`) que alterna entre emulador (dev) e SDK oficial (prod).
+Integrar `pix-emulator-mercado-pago` como servidor standalone para ambiente de desenvolvimento, através de uma camada de abstração (`PixService`) que alterna entre emulador (dev) e SDK oficial (prod). O emulador não é dependência de código — `pixService.ts` faz HTTP fetch diretamente.
 
 ### Alternativas Consideradas
 1. Manter apenas SDK oficial do Mercado Pago
@@ -15,15 +15,18 @@ Integrar `pix-emulator-mercado-pago` como dependência local para ambiente de de
 ### Motivo
 - Permite testar fluxo completo de pagamento sem credenciais reais
 - Emulador já implementa API compatível com Mercado Pago
-- Transição futura para pacote GitHub é direta (trocar `file:` por `git+https://`)
+- Transição futura para pacote GitHub é direta (basta publicar e referenciar a URL do servidor)
 
 ### Arquivos Criados
-- `app/lib/pixService.ts` — abstração com interface `IPixService`
+- `app/lib/pixConfig.ts` — instância do `PixService` do pacote `pix-payment`
+
+### Arquivos Removidos
+- `app/lib/pixService.ts` — substituído pelo pacote `pix-payment`
 
 ### Arquivos Modificados
-- `package.json` — dependência local adicionada
-- `app/comprar-plics-sw/actions.ts` — refatorado para usar PixService
-- `app/api/webhook/route.ts` — refatorado para usar PixService
+- `package.json` — adicionado `pix-payment`
+- `app/comprar-plics-sw/actions.ts` — refatorado para usar `pix-payment`
+- `app/api/webhook/route.ts` — refatorado para usar `pix-payment`
 - `.env.local` — adicionado `PIX_EMULATOR_URL` e `NEXT_PUBLIC_APP_URL`
 
 ### Funcionamento

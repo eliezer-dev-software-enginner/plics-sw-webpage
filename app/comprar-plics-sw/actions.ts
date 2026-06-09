@@ -4,23 +4,27 @@
 
 import { getUserPurchases, grantUserAccess, savePayment } from "@/app/lib/db";
 
-import { createPixService } from "@/app/lib/pixService";
+import { pixService } from "@/app/lib/pixConfig";
 
 export async function createPixPayment(userId: string) {
   "use server";
 
   try {
-    const pixService = createPixService();
-    const response = await pixService.createPayment({
-      transactionAmount: 54.5,
+    const result = await pixService.createPixPayment({
+      value: 54.5,
       description: "PLICs - Licença de Uso do Aplicativo",
-      payerEmail: process.env.EMAIL || "cliente@exemplo.com",
-      payerFirstName: "Cliente",
-      payerLastName: "PLICs",
-      externalReference: userId,
+      email: process.env.EMAIL || "cliente@exemplo.com",
+      firstName: "Cliente",
+      lastName: "PLICs",
+      externalRef: userId,
+      notificationUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/webhook`,
     });
 
-    const { id: paymentId, status, qrCodeBase64, qrCode } = response;
+    if (!result.success || !result.data) {
+      return { success: false, error: result.error || "Erro ao criar pagamento" };
+    }
+
+    const { paymentId, status, qrCodeBase64, qrCode } = result.data;
 
     if (paymentId && paymentId !== "undefined") {
       await savePayment(paymentId, userId, status);
@@ -46,8 +50,7 @@ export async function checkPaymentStatus(paymentId: string) {
   "use server";
 
   try {
-    const pixService = createPixService();
-    const result = await pixService.getPayment(paymentId);
+    const result = await pixService.getPaymentById(paymentId);
 
     return {
       success: true,
@@ -66,8 +69,7 @@ export async function syncPaymentStatus(paymentId: string, userId: string) {
   "use server";
 
   try {
-    const pixService = createPixService();
-    const result = await pixService.getPayment(paymentId);
+    const result = await pixService.getPaymentById(paymentId);
     const status = result.status;
 
     if (status === "approved") {
