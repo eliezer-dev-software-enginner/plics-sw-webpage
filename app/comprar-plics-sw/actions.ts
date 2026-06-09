@@ -71,13 +71,20 @@ export async function syncPaymentStatus(paymentId: string, userId: string) {
   try {
     const result = await getPixService().getPaymentById(paymentId);
     const status = result.status;
+    const transactionData = result.point_of_interaction?.transaction_data;
 
     if (status === "approved") {
       await grantUserAccess(userId, paymentId);
       return { success: true, status, accessGranted: true };
     }
 
-    return { success: true, status, accessGranted: false };
+    return {
+      success: true,
+      status,
+      accessGranted: false,
+      qrCodeBase64: transactionData?.qr_code_base64 ?? null,
+      qrCode: transactionData?.qr_code ?? null,
+    };
   } catch (error: any) {
     console.error("Erro ao sincronizar pagamento:", error);
     return { success: false, error: error.message };

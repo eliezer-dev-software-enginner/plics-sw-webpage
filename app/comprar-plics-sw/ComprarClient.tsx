@@ -95,8 +95,8 @@ export default function ComprarClient({
           setPixData({
             success: true,
             paymentId: initialPaymentId,
-            qrCodeBase64: null,
-            qrCode: null,
+            qrCodeBase64: syncResult.qrCodeBase64 ?? null,
+            qrCode: syncResult.qrCode ?? null,
             status: syncResult.status || 'pending',
           });
         } else {
