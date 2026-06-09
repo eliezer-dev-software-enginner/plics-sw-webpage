@@ -22,19 +22,19 @@ export function setUserId(userId: string): void {
   localStorage.setItem("plics_user_id", userId);
 }
 
-const ACCESS_CACHE_KEY = "plics_has_access";
+const PAYMENT_CACHE_KEY = "plics_payment_id";
 
-export function cacheAccessGranted(): void {
+export function savePaymentId(paymentId: string): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(ACCESS_CACHE_KEY, "true");
+  localStorage.setItem(PAYMENT_CACHE_KEY, paymentId);
 }
 
-export function hasCachedAccess(): boolean {
-  if (typeof window === "undefined") return false;
-  return localStorage.getItem(ACCESS_CACHE_KEY) === "true";
+export function getSavedPaymentId(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(PAYMENT_CACHE_KEY);
 }
 
-export function clearAccessCache(): void {
+export function clearPaymentId(): void {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(ACCESS_CACHE_KEY);
+  localStorage.removeItem(PAYMENT_CACHE_KEY);
 }

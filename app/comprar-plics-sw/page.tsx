@@ -7,11 +7,18 @@ export const dynamic = 'force-dynamic';
 export default async function Comprar({
   searchParams,
 }: {
-  searchParams: Promise<{ userId?: string; test?: string }>;
+  searchParams: Promise<{ userId?: string; test?: string; paymentId?: string }>;
 }) {
   const params = await searchParams;
   const testMode = params.test === 'success';
   const userIdFromUrl = params.userId;
+  const initialPaymentId = params.paymentId;
 
-  return <ComprarClient testMode={testMode} userIdFromUrl={userIdFromUrl} />;
+  return (
+    <ComprarClient
+      testMode={testMode}
+      initialPaymentId={initialPaymentId}
+      userIdFromUrl={userIdFromUrl}
+    />
+  );
 }

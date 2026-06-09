@@ -1,16 +1,26 @@
 'use client';
 
 import { ArrowRight, ShoppingCart } from 'lucide-react';
-import { setUserId } from '@/app/lib/userId';
+import { getUserId, getSavedPaymentId, setUserId } from '@/app/lib/userId';
 import { useRouter } from 'next/navigation';
 
 export function ComprarButton({ variant = 'primary' }: { variant?: 'primary' | 'accent' }) {
   const router = useRouter();
 
   const handleBuy = () => {
-    const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
-    setUserId(userId);
-    router.push(`/comprar-plics-sw?userId=${encodeURIComponent(userId)}`);
+    let userId = getUserId();
+    if (!userId) {
+      userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+      setUserId(userId);
+    }
+
+    const savedPaymentId = getSavedPaymentId();
+    const params = new URLSearchParams({ userId });
+    if (savedPaymentId) {
+      params.set('paymentId', savedPaymentId);
+    }
+
+    router.push(`/comprar-plics-sw?${params.toString()}`);
   };
 
   const baseStyle = {

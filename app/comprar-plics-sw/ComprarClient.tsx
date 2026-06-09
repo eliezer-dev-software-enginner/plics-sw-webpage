@@ -2,7 +2,7 @@
 
 'use client';
 
-import { cacheAccessGranted, clearAccessCache, getUserId, hasCachedAccess, setUserId } from '@/app/lib/userId';
+import { getUserId, savePaymentId, setUserId } from '@/app/lib/userId';
 import { CheckCircle, Copy, Download } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
@@ -65,48 +65,48 @@ export default function ComprarClient({
       }
 
       const result = await checkUserHasAccess(userId || '');
-      setHasAccess(result.hasAccess);
-      setAccessData({
-        hasAccess: result.hasAccess,
-        license: result.license || null,
-        downloadWindows: result.downloadWindows || null,
-        downloadLinux: result.downloadLinux || null,
-      });
 
       if (result.hasAccess) {
-        cacheAccessGranted();
-      } else if (hasCachedAccess()) {
         setHasAccess(true);
         setAccessData({
-          hasAccess: true,
-          license: 'Consulte o suporte',
-          downloadWindows: null,
-          downloadLinux: null,
+          hasAccess: result.hasAccess,
+          license: result.license || null,
+          downloadWindows: result.downloadWindows || null,
+          downloadLinux: result.downloadLinux || null,
         });
         setLoading(false);
         return;
       }
 
-      if (!result.hasAccess) {
-        if (initialPaymentId) {
-          setPixData({
-            success: true,
-            paymentId: initialPaymentId,
-            qrCodeBase64: null,
-            qrCode: null,
-            status: 'pending',
-          });
-        } else {
-          const pixResult = await createPixPayment(
-            userId || 'guest_' + Date.now(),
-          );
-          setPixData(pixResult);
+      if (initialPaymentId) {
+        const syncResult = await syncPaymentStatus(
+          initialPaymentId,
+          userId || '',
+        );
 
-          if (pixResult.paymentId) {
-            const url = new URL(window.location.href);
-            url.searchParams.set('paymentId', pixResult.paymentId);
-            window.history.replaceState({}, '', url.toString());
-          }
+        if (syncResult.accessGranted) {
+          savePaymentId(initialPaymentId);
+          window.location.reload();
+          return;
+        }
+
+        setPixData({
+          success: true,
+          paymentId: initialPaymentId,
+          qrCodeBase64: null,
+          qrCode: null,
+          status: syncResult.status || 'pending',
+        });
+      } else {
+        const pixResult = await createPixPayment(
+          userId || 'guest_' + Date.now(),
+        );
+        setPixData(pixResult);
+
+        if (pixResult.paymentId) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('paymentId', pixResult.paymentId);
+          window.history.replaceState({}, '', url.toString());
         }
       }
 
@@ -124,7 +124,7 @@ export default function ComprarClient({
     const result = await syncPaymentStatus(pixData.paymentId, userId || '');
 
     if (result.accessGranted) {
-      cacheAccessGranted();
+      savePaymentId(pixData.paymentId);
       window.location.reload();
       return;
     }
