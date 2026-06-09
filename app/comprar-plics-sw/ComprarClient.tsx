@@ -79,6 +79,8 @@ export default function ComprarClient({
       }
 
       if (initialPaymentId) {
+        savePaymentId(initialPaymentId);
+
         const syncResult = await syncPaymentStatus(
           initialPaymentId,
           userId || '',
@@ -104,6 +106,7 @@ export default function ComprarClient({
         setPixData(pixResult);
 
         if (pixResult.paymentId) {
+          savePaymentId(pixResult.paymentId);
           const url = new URL(window.location.href);
           url.searchParams.set('paymentId', pixResult.paymentId);
           window.history.replaceState({}, '', url.toString());
