@@ -50,70 +50,76 @@ export default function ComprarClient({
 
   useEffect(() => {
     async function checkAccess() {
-      let userId = userIdFromUrl || getUserId();
+      try {
+        let userId = userIdFromUrl || getUserId();
 
-      if (!userId) {
-        userId = getUserId();
-      }
+        if (!userId) {
+          userId = getUserId();
+        }
 
-      if (userIdFromUrl && userIdFromUrl !== getUserId()) {
-        setUserId(userIdFromUrl);
-      }
+        if (userIdFromUrl && userIdFromUrl !== getUserId()) {
+          setUserId(userIdFromUrl);
+        }
 
-      if (testMode && userId) {
-        await grantTestAccess(userId);
-      }
+        if (testMode && userId) {
+          await grantTestAccess(userId);
+        }
 
-      const result = await checkUserHasAccess(userId || '');
+        const result = await checkUserHasAccess(userId || '');
 
-      if (result.hasAccess) {
-        setHasAccess(true);
-        setAccessData({
-          hasAccess: result.hasAccess,
-          license: result.license || null,
-          downloadWindows: result.downloadWindows || null,
-          downloadLinux: result.downloadLinux || null,
-        });
-        setLoading(false);
-        return;
-      }
-
-      if (initialPaymentId) {
-        savePaymentId(initialPaymentId);
-
-        const syncResult = await syncPaymentStatus(
-          initialPaymentId,
-          userId || '',
-        );
-
-        if (syncResult.accessGranted) {
-          savePaymentId(initialPaymentId);
-          window.location.reload();
+        if (result.hasAccess) {
+          setHasAccess(true);
+          setAccessData({
+            hasAccess: result.hasAccess,
+            license: result.license || null,
+            downloadWindows: result.downloadWindows || null,
+            downloadLinux: result.downloadLinux || null,
+          });
           return;
         }
 
-        setPixData({
-          success: true,
-          paymentId: initialPaymentId,
-          qrCodeBase64: null,
-          qrCode: null,
-          status: syncResult.status || 'pending',
-        });
-      } else {
-        const pixResult = await createPixPayment(
-          userId || 'guest_' + Date.now(),
-        );
-        setPixData(pixResult);
+        if (initialPaymentId) {
+          savePaymentId(initialPaymentId);
 
-        if (pixResult.paymentId) {
-          savePaymentId(pixResult.paymentId);
-          const url = new URL(window.location.href);
-          url.searchParams.set('paymentId', pixResult.paymentId);
-          window.history.replaceState({}, '', url.toString());
+          const syncResult = await syncPaymentStatus(
+            initialPaymentId,
+            userId || '',
+          );
+
+          if (syncResult.accessGranted) {
+            savePaymentId(initialPaymentId);
+            window.location.reload();
+            return;
+          }
+
+          setPixData({
+            success: true,
+            paymentId: initialPaymentId,
+            qrCodeBase64: null,
+            qrCode: null,
+            status: syncResult.status || 'pending',
+          });
+        } else {
+          const pixResult = await createPixPayment(
+            userId || 'guest_' + Date.now(),
+          );
+          setPixData(pixResult);
+
+          if (pixResult.paymentId) {
+            savePaymentId(pixResult.paymentId);
+            const url = new URL(window.location.href);
+            url.searchParams.set('paymentId', pixResult.paymentId);
+            window.history.replaceState({}, '', url.toString());
+          }
         }
+      } catch (error) {
+        setPixData({
+          success: false,
+          error: error instanceof Error ? error.message : 'Erro inesperado',
+        });
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     checkAccess();

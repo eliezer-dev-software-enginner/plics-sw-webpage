@@ -4,20 +4,20 @@
 
 import { getUserPurchases, grantUserAccess, savePayment } from "@/app/lib/db";
 
-import { pixService } from "@/app/lib/pixConfig";
+import { getPixService } from "@/app/lib/pixConfig";
 
 export async function createPixPayment(userId: string) {
   "use server";
 
   try {
-    const result = await pixService.createPixPayment({
+    const result = await getPixService().createPixPayment({
       value: 54.5,
       description: "PLICs - Licença de Uso do Aplicativo",
       email: process.env.EMAIL || "cliente@exemplo.com",
       firstName: "Cliente",
       lastName: "PLICs",
       externalRef: userId,
-      notificationUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/webhook`,
+      notificationUrl: `${process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")}/api/webhook`,
     });
 
     if (!result.success || !result.data) {
@@ -50,7 +50,7 @@ export async function checkPaymentStatus(paymentId: string) {
   "use server";
 
   try {
-    const result = await pixService.getPaymentById(paymentId);
+    const result = await getPixService().getPaymentById(paymentId);
 
     return {
       success: true,
@@ -69,7 +69,7 @@ export async function syncPaymentStatus(paymentId: string, userId: string) {
   "use server";
 
   try {
-    const result = await pixService.getPaymentById(paymentId);
+    const result = await getPixService().getPaymentById(paymentId);
     const status = result.status;
 
     if (status === "approved") {

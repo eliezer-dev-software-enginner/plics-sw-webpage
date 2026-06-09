@@ -1,5 +1,5 @@
 import { getPayment, grantUserAccess, updatePaymentStatus } from "@/app/lib/db";
-import { pixService } from "@/app/lib/pixConfig";
+import { getPixService } from "@/app/lib/pixConfig";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       return Response.json({ received: true, test: true });
     }
 
-    const result = await pixService.getPaymentById(paymentIdStr);
+    const result = await getPixService().getPaymentById(paymentIdStr);
 
     const novoStatus: string = result.status || "unknown";
 
