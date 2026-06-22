@@ -177,10 +177,10 @@ export default function App() {
 
             <div className={style.pricingCard}>
               <div className={style.pricingCardInner}>
-                <span className={style.oldPrice}>De R$ 73,99</span>
+                <span className={style.oldPrice}>De R$ 87,99</span>
                 <div className={style.newPriceWrap}>
                   <span className={style.currency}>R$</span>
-                  <span className={style.newPrice}>54</span>
+                  <span className={style.newPrice}>34</span>
                   <span className={style.cents}>,50</span>
                 </div>
                 <p className={style.priceNote}>pagamento único · via PIX</p>

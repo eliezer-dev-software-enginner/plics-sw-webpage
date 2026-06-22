@@ -11,7 +11,7 @@ export async function createPixPayment(userId: string) {
 
   try {
     const result = await getPixService().createPixPayment({
-      value: 54.5,
+      value: 34.5,
       description: "PLICs - Licença de Uso do Aplicativo",
       email: process.env.EMAIL || "cliente@exemplo.com",
       firstName: "Cliente",
