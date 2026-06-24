@@ -309,8 +309,8 @@ export default function ComprarClient({
                 <div className={styles.urgencyImageWrap}>
                   <Image
                     src="/banner_vertical_anuncio.png"
-                    width={200}
-                    height={356}
+                    width={380}
+                    height={676}
                     alt="Banner Plics SW"
                     className={styles.urgencyImage}
                   />

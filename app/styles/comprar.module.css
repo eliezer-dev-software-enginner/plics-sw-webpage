@@ -45,7 +45,7 @@
 .content {
   position: relative;
   z-index: 1;
-  max-width: 560px;
+  max-width: 920px;
   margin: 0 auto;
   padding: 5rem 1.5rem 4rem;
 }
@@ -165,12 +165,12 @@
 
 .urgencyImageWrap {
   flex-shrink: 0;
-  width: 140px;
+  width: 380px;
 }
 
 @media (max-width: 600px) {
   .urgencyImageWrap {
-    width: 120px;
+    width: 140px;
   }
 }
 
