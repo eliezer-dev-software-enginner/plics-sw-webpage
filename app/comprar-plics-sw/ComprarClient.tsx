@@ -13,6 +13,7 @@ import {
 } from './actions';
 
 import styles from '@/app/styles/comprar.module.css';
+import Image from 'next/image';
 import Link from 'next/link';
 import FalarComSuporteComponent from '../components/FalarComSuporte';
 import PixPayment from './PixPayment';
@@ -304,36 +305,50 @@ export default function ComprarClient({
                 </span>
               </div>
 
-              <p className={styles.urgencyHeadline}>
-                🚨{' '}
-                <strong>
-                  Enquanto você ainda usa caderno, planilhas e anotações
-                  perdidas… seu concorrente já está organizando clientes e
-                  fechando mais vendas.
-                </strong>
-              </p>
+              <div className={styles.urgencyContent}>
+                <div className={styles.urgencyImageWrap}>
+                  <Image
+                    src="/banner_vertical_anuncio.png"
+                    width={200}
+                    height={356}
+                    alt="Banner Plics SW"
+                    className={styles.urgencyImage}
+                  />
+                </div>
 
-              <p className={styles.urgencyBody}>
-                Todo dia sem controle é dinheiro escapando.
-              </p>
+                <div className={styles.urgencyTextContent}>
+                  <p className={styles.urgencyHeadline}>
+                    🚨{' '}
+                    <strong>
+                      Enquanto você ainda usa caderno, planilhas e anotações
+                      perdidas… seu concorrente já está organizando clientes e
+                      fechando mais vendas.
+                    </strong>
+                  </p>
 
-              <p className={styles.urgencyBody}>
-                Com o <strong>Plics SW</strong>, você cadastra clientes em
-                segundos e mantém tudo organizado, sem mensalidade e sem
-                complicação.
-              </p>
+                  <p className={styles.urgencyBody}>
+                    Todo dia sem controle é dinheiro escapando.
+                  </p>
 
-              <ul className={styles.urgencyList}>
-                <li>✅ Cadastro rápido de clientes</li>
-                <li>✅ Fácil de usar</li>
-                <li>✅ Compra única, sem assinaturas</li>
-                <li>✅ Mais organização e menos dor de cabeça</li>
-                <li>✅ Ideal para quem quer profissionalizar o negócio</li>
-              </ul>
+                  <p className={styles.urgencyBody}>
+                    Com o <strong>Plics SW</strong>, você cadastra clientes em
+                    segundos e mantém tudo organizado, sem mensalidade e sem
+                    complicação.
+                  </p>
 
-              <p className={styles.urgencyFooter}>
-                📈 Quem se organiza primeiro, sai na frente.
-              </p>
+                  <ul className={styles.urgencyList}>
+                    <li>✅ Cadastro rápido de clientes</li>
+                    <li>✅ Fácil de usar</li>
+                    <li>✅ Compra única, sem assinaturas</li>
+                    <li>✅ Mais organização e menos dor de cabeça</li>
+                    <li>✅ Ideal para quem quer profissionalizar o negócio</li>
+                  </ul>
+
+                  <p className={styles.urgencyFooter}>
+                    📈 Quem se organiza primeiro, sai na frente.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
