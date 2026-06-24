@@ -320,32 +320,53 @@ export default function ComprarClient({
                   <p className={styles.urgencyHeadline}>
                     🚨{' '}
                     <strong>
-                      Enquanto você ainda usa caderno, planilhas e anotações
-                      perdidas… seu concorrente já está organizando clientes e
-                      fechando mais vendas.
+                      Seu concorrente já sabe exatamente o que tem em estoque. E
+                      você?
                     </strong>
                   </p>
 
                   <p className={styles.urgencyBody}>
-                    Todo dia sem controle é dinheiro escapando.
+                    Enquanto você perde tempo procurando produtos, conferindo
+                    preços manualmente e corrigindo erros de cadastro, outros
+                    negócios estão vendendo mais e atendendo melhor.
                   </p>
 
                   <p className={styles.urgencyBody}>
-                    Com o <strong>Plics SW</strong>, você cadastra clientes em
-                    segundos e mantém tudo organizado, sem mensalidade e sem
-                    complicação.
+                    Cada produto sem cadastro, preço errado ou estoque
+                    desatualizado significa dinheiro saindo do seu bolso.
+                  </p>
+
+                  <p className={styles.urgencyBody}>
+                    Com o <strong>Plics SW</strong>, você cadastra seus
+                    produtos de forma rápida e organizada, controla o estoque em
+                    tempo real e mantém todas as informações do seu negócio em
+                    um só lugar.
                   </p>
 
                   <ul className={styles.urgencyList}>
-                    <li>✅ Cadastro rápido de clientes</li>
-                    <li>✅ Fácil de usar</li>
-                    <li>✅ Compra única, sem assinaturas</li>
-                    <li>✅ Mais organização e menos dor de cabeça</li>
-                    <li>✅ Ideal para quem quer profissionalizar o negócio</li>
+                    <li>✅ Cadastro completo de produtos</li>
+                    <li>✅ Controle de estoque simplificado</li>
+                    <li>✅ Organização de categorias e preços</li>
+                    <li>✅ Menos erros e mais produtividade</li>
+                    <li>✅ Compra única, sem mensalidades</li>
                   </ul>
 
+                  <p className={styles.urgencyBody}>
+                    <strong>Não fique para trás.</strong>
+                  </p>
+
+                  <p className={styles.urgencyBody}>
+                    Quem organiza melhor o negócio toma decisões mais rápidas,
+                    atende melhor os clientes e vende mais.
+                  </p>
+
                   <p className={styles.urgencyFooter}>
-                    📈 Quem se organiza primeiro, sai na frente.
+                    🔥 Comece hoje mesmo a profissionalizar sua gestão com o
+                    Plics SW.
+                  </p>
+
+                  <p className={styles.urgencyTagline}>
+                    Plics SW — Menos planilhas. Mais controle. Mais resultados.
                   </p>
                 </div>
               </div>

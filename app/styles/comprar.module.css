@@ -267,6 +267,15 @@
   font-weight: 600;
 }
 
+.urgencyTagline {
+  font-size: 0.85rem;
+  color: #fef2f2;
+  line-height: 1.5;
+  margin: 0.25rem 0 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 /* ===========================
    Cards
 =========================== */
