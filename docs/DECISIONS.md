@@ -76,3 +76,20 @@ Fortalecer prova social antes da seção de preço, seguindo padrão observado n
 - Borda com gradiente sutil via `::before` pseudo-elemento com `mask-composite`
 - Sombra mais rica com transição no hover
 - Glow inferior ampliado
+
+---
+
+## 004 — Timer de escassez e persuasão na página de compra
+
+**Data:** 2026-06-24
+**Status:** Implementado
+
+### Decisão
+Adicionar contagem regressiva de 4 minutos em vermelho na página `/comprar-plics-sw`, com texto de persuasão explorando "medo de ficar para trás".
+
+### Motivo
+Técnica de conversão (escassez + prova social negativa) para aumentar a taxa de finalização de compras.
+
+### Arquivos Modificados
+- `app/comprar-plics-sw/ComprarClient.tsx` — adicionado `useEffect` com timer de 240s, estado `timeLeft`/`timerExpired`, e UI do card de urgência
+- `app/styles/comprar.module.css` — estilos `.urgencyCard`, `.urgencyTimer`, `.urgencyText` com vermelho e pulsação na borda

@@ -47,6 +47,26 @@ export default function ComprarClient({
   const [accessData, setAccessData] = useState<AccessData | null>(null);
   const [pixData, setPixData] = useState<PixData | null>(null);
   const [checkingPayment, setCheckingPayment] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(240);
+  const [timerExpired, setTimerExpired] = useState(false);
+
+  useEffect(() => {
+    if (hasAccess || timerExpired) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setTimerExpired(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [hasAccess, timerExpired]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
 
   useEffect(() => {
     async function checkAccess() {
@@ -272,6 +292,24 @@ export default function ComprarClient({
         </div>
 
         <div className={styles.wrapper}>
+          {!timerExpired && (
+            <div className={styles.urgencyCard}>
+              <div className={styles.urgencyTimer}>
+                <span className={styles.urgencyTimerLabel}>
+                  Oferta expira em
+                </span>
+                <span className={styles.urgencyTimerValue}>
+                  {String(minutes).padStart(2, '0')}:
+                  {String(seconds).padStart(2, '0')}
+                </span>
+              </div>
+              <p className={styles.urgencyText}>
+                Enquanto você ainda pensa, seu concorrente já está usando o
+                PLICs SW para vender mais e gerenciar melhor o negócio dele.
+              </p>
+            </div>
+          )}
+
           {pixData && <PixPayment pixData={pixData} />}
 
           {pixData?.paymentId && (
