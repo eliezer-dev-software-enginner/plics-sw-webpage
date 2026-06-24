@@ -303,9 +303,36 @@ export default function ComprarClient({
                   {String(seconds).padStart(2, '0')}
                 </span>
               </div>
-              <p className={styles.urgencyText}>
-                Enquanto você ainda pensa, seu concorrente já está usando o
-                PLICs SW para vender mais e gerenciar melhor o negócio dele.
+
+              <p className={styles.urgencyHeadline}>
+                🚨{' '}
+                <strong>
+                  Enquanto você ainda usa caderno, planilhas e anotações
+                  perdidas… seu concorrente já está organizando clientes e
+                  fechando mais vendas.
+                </strong>
+              </p>
+
+              <p className={styles.urgencyBody}>
+                Todo dia sem controle é dinheiro escapando.
+              </p>
+
+              <p className={styles.urgencyBody}>
+                Com o <strong>Plics SW</strong>, você cadastra clientes em
+                segundos e mantém tudo organizado, sem mensalidade e sem
+                complicação.
+              </p>
+
+              <ul className={styles.urgencyList}>
+                <li>✅ Cadastro rápido de clientes</li>
+                <li>✅ Fácil de usar</li>
+                <li>✅ Compra única, sem assinaturas</li>
+                <li>✅ Mais organização e menos dor de cabeça</li>
+                <li>✅ Ideal para quem quer profissionalizar o negócio</li>
+              </ul>
+
+              <p className={styles.urgencyFooter}>
+                📈 Quem se organiza primeiro, sai na frente.
               </p>
             </div>
           )}
