@@ -1,4 +1,14 @@
-import { CheckCircle, Shield, WifiOff } from "lucide-react";
+import {
+  BarChart3,
+  CheckCircle,
+  Database,
+  Headphones,
+  Package,
+  Shield,
+  User,
+  WifiOff,
+  Zap,
+} from "lucide-react";
 
 import { ComprarButton } from "@/app/components/ComprarButton";
 import Image from "next/image";
@@ -132,14 +142,106 @@ export default function App() {
               serviços! E amamos receber os pequenos e novos negócios.
             </p>
 
-            <Image
-              src="/mulher-usando-pdv.png"
-              width={1000}
-              height={560}
-              alt="Interface do Sistema Plics-SW Dashboard"
-              className={style.dashboardImg}
-              priority
-            />
+            <div className={style.versatilidadeCard}>
+              <div className={style.versatilidadeCardFrame}>
+                <div className={style.dashboardBar}>
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <Image
+                  src="/mulher-usando-pdv.png"
+                  width={1000}
+                  height={560}
+                  alt="Interface do Sistema Plics-SW Dashboard"
+                  className={style.dashboardImg}
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Benefícios ──────────────────────────── */}
+        <section className={style.benefits}>
+          <div className={style.benefitsInner}>
+            <h2 className={style.benefitsTitle}>
+              Conte com o PLICs SW para fazer a{" "}
+              <span className={style.heroAccent}>gestão completa</span>
+              <br />
+              do seu negócio
+            </h2>
+            <p className={style.benefitsSubtitle}>
+              Automatize processos e ganhe tempo para focar no crescimento do
+              seu negócio.
+            </p>
+
+            <div className={style.benefitsGrid}>
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Zap size={22} />
+                </div>
+                <h3>Fácil de usar</h3>
+                <p>
+                  Faça a gestão do seu negócio com uma plataforma simples de
+                  usar.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Package size={22} />
+                </div>
+                <h3>Controle de Estoque</h3>
+                <p>
+                  Controle de estoque integrado e automatizado para otimizar
+                  suas operações.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Headphones size={22} />
+                </div>
+                <h3>Suporte Completo</h3>
+                <p>
+                  Conte com nosso suporte para te apoiar em todos os momentos.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <CheckCircle size={22} />
+                </div>
+                <h3>Gestão Completa</h3>
+                <p>
+                  Vendas, compras, estoque e financeiro integrados em um só
+                  lugar.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Database size={22} />
+                </div>
+                <h3>Informações Integradas</h3>
+                <p>
+                  Todas as informações do seu negócio organizadas em um só
+                  lugar, sem planilhas.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <BarChart3 size={22} />
+                </div>
+                <h3>Decisões Melhores</h3>
+                <p>
+                  Relatórios que te ajudam a ter uma visão analítica
+                  consolidada do seu negócio.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -190,6 +292,75 @@ export default function App() {
                 </p>
               </div>
               <div className={style.pricingCardGlow} aria-hidden="true" />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Depoimentos ──────────────────────────── */}
+        <section className={style.testimonials}>
+          <div className={style.testimonialsInner}>
+            <div className={style.featuresSectionLabel}>Depoimentos</div>
+            <h2 className={style.featuresTitle}>
+              O que nossos clientes dizem
+            </h2>
+
+            <div className={style.testimonialGrid}>
+              <div className={style.testimonialCard}>
+                <div className={style.testimonialCardImg}>
+                  <User size={32} />
+                </div>
+                <div className={style.testimonialQuote} aria-hidden="true">
+                  &ldquo;
+                </div>
+                <p className={style.testimonialText}>
+                  O PLICs SW transformou a gestão da minha loja. Agora tenho
+                  controle total do estoque e das vendas, tudo offline e sem
+                  complicação.
+                </p>
+                <div className={style.testimonialAuthor}>
+                  <strong>Ana Silva</strong>
+                  <span>Proprietária da BS Store</span>
+                </div>
+              </div>
+
+              <div
+                className={`${style.testimonialCard} ${style.testimonialCardHighlight}`}
+              >
+                <div className={style.testimonialCardImg}>
+                  <User size={32} />
+                </div>
+                <div className={style.testimonialQuote} aria-hidden="true">
+                  &ldquo;
+                </div>
+                <p className={style.testimonialText}>
+                  Paguei uma vez e uso para sempre. Melhor investimento que fiz
+                  para meu negócio. O suporte é rápido e sempre me ajudam quando
+                  preciso.
+                </p>
+                <div className={style.testimonialAuthor}>
+                  <strong>Carlos Oliveira</strong>
+                  <span>Fundador da OFC Materiais</span>
+                </div>
+                <div className={style.testimonialCardGlow} aria-hidden="true" />
+              </div>
+
+              <div className={style.testimonialCard}>
+                <div className={style.testimonialCardImg}>
+                  <User size={32} />
+                </div>
+                <div className={style.testimonialQuote} aria-hidden="true">
+                  &ldquo;
+                </div>
+                <p className={style.testimonialText}>
+                  Finalmente um sistema simples de usar que não precisa de
+                  internet. Atendo meus clientes na loja e em feiras sem
+                  preocupação.
+                </p>
+                <div className={style.testimonialAuthor}>
+                  <strong>Juliana Costa</strong>
+                  <span>Floricultura Primavera</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>

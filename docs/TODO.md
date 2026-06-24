@@ -4,8 +4,10 @@
 
 - [ ] (Futuro) Migrar dependência local para pacote GitHub
 - [ ] Ajustar webhook default do emulador (`/api/checkout/webhook` → `/api/webhook`) se necessário
-
 ## Concluídas
+
+- [x] Adicionar seção "Benefícios" na LandingPage com conteúdo inspirado no bling.com.br
+- [x] Adicionar seção "Depoimentos" com cards de imagem (avatar com iniciais) + texto
 
 - [x] Criar docs (AI_RULES, CONTEXT, DECISIONS, TODO)
 - [x] Adicionar dependência local `mercadopago-pix-emulator` no package.json

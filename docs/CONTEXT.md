@@ -21,7 +21,9 @@ plics-sw-website/
 │   │   ├── mercadoPago.ts       — Configuração do Mercado Pago SDK (apenas prod)
 │   │   ├── pixService.ts        — ★ Abstração: emulador (dev) / SDK (prod)
 │   │   └── userId.ts            — Gerenciamento de userId
-│   └── styles/                  — CSS Modules
+│   ├── styles/                  — CSS Modules
+│   │   └── Home.module.css      — Estilos da LandingPage (+ Benefícios, Depoimentos)
+│   └── page.tsx                 — LandingPage (Hero, Features, Versatilidade, Benefícios, Depoimentos, Pricing)
 ├── prisma/schema.prisma         — Modelos Payment e UserPurchase
 ├── docs/
 │   ├── AI_RULES.md

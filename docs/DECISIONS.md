@@ -32,3 +32,47 @@ Integrar `pix-emulator-mercado-pago` como servidor standalone para ambiente de d
 ### Funcionamento
 - **Dev** (`NODE_ENV !== 'production'`): `EmulatorPixService` faz HTTP fetch para `localhost:3001`
 - **Prod**: `MercadoPagoPixService` usa SDK `mercadopago` (comportamento original)
+
+---
+
+## 002 — Nova seção "Benefícios" na LandingPage
+
+**Data:** 2026-06-24
+**Status:** Implementado
+
+### Decisão
+Adicionar uma nova seção de benefícios na LandingPage entre as seções "Versatilidade" e "Preço", com grid 3×2 de cards destacando facilidade de uso, controle de estoque, suporte, gestão completa, informações integradas e decisões melhores.
+
+### Motivo
+Conteúdo extraído do site Bling (bling.com.br) para enriquecer a página com copy mais direcionada a benefícios do PLICs SW, sem relação de parceria — apenas inspiração de copywriting.
+
+### Arquivos Modificados
+- `app/page.tsx` — adicionada seção `<section className={style.benefits}>` com 6 cards
+- `app/styles/Home.module.css` — adicionados estilos `.benefits`, `.benefitCard`, etc.
+
+### Conteúdo Adicionado
+- "Conte com o PLICs SW para fazer a gestão completa do seu negócio"
+- "Automatize processos e ganhe tempo para focar no crescimento do seu negócio"
+- Cards: Fácil de usar, Controle de Estoque, Suporte Completo, Gestão Completa, Informações Integradas, Decisões Melhores
+
+---
+
+## 003 — Seção "Depoimentos" na LandingPage
+
+**Data:** 2026-06-24
+**Status:** Implementado
+
+### Decisão
+Adicionar seção de depoimentos de clientes entre "Benefícios" e "Preço", com 3 cards em grid contendo quote decorativo, texto do depoimento, avatar com iniciais em gradiente dourado, nome e negócio.
+
+### Motivo
+Fortalecer prova social antes da seção de preço, seguindo padrão observado no site Bling que usa depoimentos de clientes reais.
+
+### Arquivos Modificados
+- `app/page.tsx` — adicionada seção `<section className={style.testimonials}>` após Pricing, com 3 cards contendo imagem placeholder gradiente + quote + texto + autor
+- `app/styles/Home.module.css` — adicionados estilos `.testimonials`, `.testimonialCard`, `.testimonialCardImg`, `.testimonialAuthor`, etc.
+
+### Card do Dashboard
+- Borda com gradiente sutil via `::before` pseudo-elemento com `mask-composite`
+- Sombra mais rica com transição no hover
+- Glow inferior ampliado
