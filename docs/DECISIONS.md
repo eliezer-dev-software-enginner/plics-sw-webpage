@@ -90,6 +90,12 @@ Adicionar contagem regressiva de 4 minutos em vermelho na página `/comprar-plic
 ### Motivo
 Técnica de conversão (escassez + prova social negativa) para aumentar a taxa de finalização de compras.
 
+### Iterações
+1. Timer de 4min + texto inicial de persuasão
+2. Substituída copy para versão focada em estoque com checklist e tagline final
+3. Adicionado banner lateral `banner_vertical_anuncio.png` com layout flex (image + texto)
+4. Aumentado `max-width` do conteúdo para 920px e imagem para 380px em telas grandes
+
 ### Arquivos Modificados
-- `app/comprar-plics-sw/ComprarClient.tsx` — adicionado `useEffect` com timer de 240s, estado `timeLeft`/`timerExpired`, e UI do card de urgência
-- `app/styles/comprar.module.css` — estilos `.urgencyCard`, `.urgencyTimer`, `.urgencyText` com vermelho e pulsação na borda
+- `app/comprar-plics-sw/ComprarClient.tsx` — adicionado `useEffect` com timer de 240s, estado `timeLeft`/`timerExpired`, UI do card de urgência, copy do anúncio, import do `Image` e banner
+- `app/styles/comprar.module.css` — estilos `.urgencyCard`, `.urgencyTimer`, `.urgencyText`, `.urgencyContent`, `.urgencyImageWrap`, `.urgencyTagline`; aumentado `max-width` do `.content` para 920px
