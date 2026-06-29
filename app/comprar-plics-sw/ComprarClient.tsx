@@ -48,7 +48,7 @@ export default function ComprarClient({
   const [accessData, setAccessData] = useState<AccessData | null>(null);
   const [pixData, setPixData] = useState<PixData | null>(null);
   const [checkingPayment, setCheckingPayment] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(240);
+  const [timeLeft, setTimeLeft] = useState(300);
   const [timerExpired, setTimerExpired] = useState(false);
 
   useEffect(() => {
@@ -308,10 +308,10 @@ export default function ComprarClient({
               <div className={styles.urgencyContent}>
                 <div className={styles.urgencyImageWrap}>
                   <Image
-                    src="/banner_vertical_anuncio.png"
+                    src='/banner_vertical_anuncio.png'
                     width={380}
                     height={676}
-                    alt="Banner Plics SW"
+                    alt='Banner Plics SW'
                     className={styles.urgencyImage}
                   />
                 </div>
@@ -337,10 +337,10 @@ export default function ComprarClient({
                   </p>
 
                   <p className={styles.urgencyBody}>
-                    Com o <strong>Plics SW</strong>, você cadastra seus
-                    produtos de forma rápida e organizada, controla o estoque em
-                    tempo real e mantém todas as informações do seu negócio em
-                    um só lugar.
+                    Com o <strong>Plics SW</strong>, você cadastra seus produtos
+                    de forma rápida e organizada, controla o estoque em tempo
+                    real e mantém todas as informações do seu negócio em um só
+                    lugar.
                   </p>
 
                   <ul className={styles.urgencyList}>

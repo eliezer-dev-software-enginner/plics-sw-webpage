@@ -37,6 +37,10 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
     );
   }
 
+  function getPriceFormatado(price: string) {
+    return 'R$ ' + price?.replace('.', ',');
+  }
+
   return (
     <div className={styles.card}>
       <p className={styles.label}>Escaneie o QR Code para pagar:</p>
@@ -49,7 +53,11 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
 
       <button onClick={handleCopyPixKey} className={styles.button}>
         <Copy className={styles.icon} />
-        Copiar Chave PIX
+        Copiar Chave PIX DE (
+        <span style={{ textDecoration: 'line-through' }}>
+          {getPriceFormatado(process.env.NEXT_PUBLIC_PRECO_DE!)}
+        </span>
+        ) POR ({getPriceFormatado(process.env.NEXT_PUBLIC_PRECO!)})
       </button>
 
       <div className={styles.status}>
