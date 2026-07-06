@@ -1,37 +1,27 @@
-//app/comprar-plics-sw/ComprarClient.tsx
-
 'use client';
 
-import { getUserId, savePaymentId, setUserId } from '@/app/lib/userId';
 import { CheckCircle, Copy, Download } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import {
   checkUserHasAccess,
   createPixPayment,
   grantTestAccess,
   syncPaymentStatus,
 } from './actions';
+import { getUserId, savePaymentId, setUserId } from '@/app/lib/userId';
+import { useEffect, useState } from 'react';
 
-import styles from '@/app/styles/comprar.module.css';
+import FalarComSuporteComponent from '../components/FalarComSuporte';
 import Image from 'next/image';
 import Link from 'next/link';
-import FalarComSuporteComponent from '../components/FalarComSuporte';
-import PixPayment from './PixPayment';
+import PixPaymentHolder from './components/pix-payment-holder';
+import { PixPaymentResult } from 'pix-payment';
+import styles from '@/app/styles/comprar.module.css';
 
 interface AccessData {
   hasAccess: boolean;
   license: string | null;
   downloadWindows: string | null;
   downloadLinux: string | null;
-}
-
-interface PixData {
-  success: boolean;
-  paymentId?: string;
-  qrCodeBase64?: string | null;
-  qrCode?: string | null;
-  status?: string;
-  error?: string;
 }
 
 export default function ComprarClient({
@@ -46,10 +36,11 @@ export default function ComprarClient({
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
   const [accessData, setAccessData] = useState<AccessData | null>(null);
-  const [pixData, setPixData] = useState<PixData | null>(null);
+  const [pixData, setPixData] = useState<PixPaymentResult | null>(null);
   const [checkingPayment, setCheckingPayment] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300);
   const [timerExpired, setTimerExpired] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (hasAccess || timerExpired) return;
@@ -73,6 +64,7 @@ export default function ComprarClient({
     async function checkAccess() {
       try {
         let userId = userIdFromUrl || getUserId();
+        console.log('userId: ' + userId);
 
         if (!userId) {
           userId = getUserId();
@@ -87,6 +79,7 @@ export default function ComprarClient({
         }
 
         const result = await checkUserHasAccess(userId || '');
+        console.log(result);
 
         if (result.hasAccess) {
           setHasAccess(true);
@@ -119,39 +112,42 @@ export default function ComprarClient({
             );
             setPixData(pixResult);
 
-            if (pixResult.paymentId) {
-              savePaymentId(pixResult.paymentId);
+            const paymentId = pixResult.data?.paymentId;
+            if (paymentId) {
+              savePaymentId(paymentId);
               const url = new URL(window.location.href);
-              url.searchParams.set('paymentId', pixResult.paymentId);
+              url.searchParams.set('paymentId', paymentId);
               window.history.replaceState({}, '', url.toString());
             }
           } else {
             setPixData({
               success: true,
-              paymentId: initialPaymentId,
-              qrCodeBase64: syncResult.qrCodeBase64 ?? null,
-              qrCode: syncResult.qrCode ?? null,
-              status: syncResult.status || 'pending',
+              error: null,
+              data: {
+                paymentId: initialPaymentId,
+                qrCodeBase64: syncResult.qrCodeBase64 ?? null,
+                qrCode: syncResult.qrCode ?? null,
+                status: syncResult.status || 'pending',
+              },
             });
           }
         } else {
           const pixResult = await createPixPayment(
             userId || 'guest_' + Date.now(),
           );
-          setPixData(pixResult);
 
-          if (pixResult.paymentId) {
-            savePaymentId(pixResult.paymentId);
+          setPixData(pixResult);
+          const paymentId = pixResult.data?.paymentId;
+          if (paymentId) {
+            savePaymentId(paymentId);
             const url = new URL(window.location.href);
-            url.searchParams.set('paymentId', pixResult.paymentId);
+            url.searchParams.set('paymentId', paymentId);
             window.history.replaceState({}, '', url.toString());
           }
         }
-      } catch (error) {
-        setPixData({
-          success: false,
-          error: error instanceof Error ? error.message : 'Erro inesperado',
-        });
+      } catch (error: any) {
+        setPixData(null);
+        setErrorMessage(error.message);
       } finally {
         setLoading(false);
       }
@@ -161,32 +157,21 @@ export default function ComprarClient({
   }, [testMode, initialPaymentId, userIdFromUrl]);
 
   const handleCheckPayment = async () => {
-    if (!pixData?.paymentId) return;
+    const paymentId = pixData?.data?.paymentId;
+    if (paymentId) return;
 
     setCheckingPayment(true);
     const userId = getUserId();
-    const result = await syncPaymentStatus(pixData.paymentId, userId || '');
+    const result = await syncPaymentStatus(paymentId!, userId || '');
 
     if (result.accessGranted) {
-      savePaymentId(pixData.paymentId);
+      savePaymentId(paymentId!);
       window.location.reload();
       return;
     }
 
     setCheckingPayment(false);
   };
-
-  if (loading) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.wrapper}>
-            <p>Carregando...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (hasAccess && accessData) {
     return (
@@ -373,19 +358,13 @@ export default function ComprarClient({
             </div>
           )}
 
-          {pixData && <PixPayment pixData={pixData} />}
-
-          {pixData?.paymentId && (
-            <button
-              onClick={handleCheckPayment}
-              disabled={checkingPayment}
-              style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}
-            >
-              {checkingPayment
-                ? 'Verificando...'
-                : 'Já paguei! Verificar pagamento'}
-            </button>
-          )}
+          <PixPaymentHolder
+            loading={loading}
+            pixData={pixData}
+            handleCheckPayment={handleCheckPayment}
+            checkingPayment={checkingPayment}
+            errorMessage={errorMessage}
+          />
 
           <FalarComSuporteComponent />
         </div>

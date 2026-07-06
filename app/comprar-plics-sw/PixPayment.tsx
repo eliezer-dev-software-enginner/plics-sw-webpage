@@ -3,21 +3,19 @@
 import { CheckCircle, Copy } from 'lucide-react';
 
 import styles from '@/app/styles/PixPayment.module.css';
+import { PixPaymentResult } from 'pix-payment';
 import { toast } from 'react-toastify';
 
-interface PixData {
-  success: boolean;
-  paymentId?: string;
-  qrCodeBase64?: string | null;
-  qrCode?: string | null;
-  status?: string;
-  error?: string;
-}
-
-export default function PixPayment({ pixData }: { pixData: PixData }) {
+export default function PixPayment({
+  pixData,
+  errorMessage,
+}: {
+  pixData: PixPaymentResult;
+  errorMessage: string;
+}) {
   const handleCopyPixKey = () => {
-    if (pixData.qrCode) {
-      navigator.clipboard.writeText(pixData.qrCode);
+    if (pixData.data?.qrCode) {
+      navigator.clipboard.writeText(pixData.data.qrCode);
 
       toast.success('✅ Chave Pix copiada com sucesso!', {
         position: 'bottom-center',
@@ -31,7 +29,7 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
       <div className={styles.errorContainer}>
         <div className={styles.errorContent}>
           <h1 className={styles.errorTitle}>Erro ao gerar pagamento</h1>
-          <p className={styles.errorMessage}>{pixData.error}</p>
+          <p className={styles.errorMessage}>{errorMessage}</p>
         </div>
       </div>
     );
@@ -46,30 +44,30 @@ export default function PixPayment({ pixData }: { pixData: PixData }) {
       <p className={styles.label}>Escaneie o QR Code para pagar:</p>
 
       <img
-        src={`data:image/png;base64,${pixData.qrCodeBase64}`}
+        src={`data:image/png;base64,${pixData.data?.qrCodeBase64}`}
         alt='PIX QR Code'
         className={styles.qrCode}
       />
 
       <button onClick={handleCopyPixKey} className={styles.button}>
         <Copy className={styles.icon} />
-        Copiar Chave PIX DE (
+        Copiar Chave PIX
         <span style={{ textDecoration: 'line-through' }}>
-          {getPriceFormatado(process.env.NEXT_PUBLIC_PRECO_DE!)}
+          DE ({getPriceFormatado(process.env.NEXT_PUBLIC_PRECO_DE!)})
         </span>
-        ) POR ({getPriceFormatado(process.env.NEXT_PUBLIC_PRECO!)})
+        POR ({getPriceFormatado(process.env.NEXT_PUBLIC_PRECO!)})
       </button>
 
       <div className={styles.status}>
         <span>Status:</span>
         <span className={styles.statusText}>
           <CheckCircle className={styles.iconSmall} />
-          {pixData.status}
+          {pixData.data?.status}
         </span>
       </div>
 
-      {pixData.paymentId && (
-        <p className={styles.paymentId}>ID: {pixData.paymentId}</p>
+      {pixData.data?.paymentId && (
+        <p className={styles.paymentId}>ID: {pixData.data.paymentId}</p>
       )}
     </div>
   );

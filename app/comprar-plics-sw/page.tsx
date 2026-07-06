@@ -14,6 +14,8 @@ export default async function Comprar({
   const userIdFromUrl = params.userId;
   const initialPaymentId = params.paymentId;
 
+  //console.log(testMode);
+
   return (
     <ComprarClient
       testMode={testMode}
