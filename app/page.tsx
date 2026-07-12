@@ -8,23 +8,24 @@ import {
   User,
   WifiOff,
   Zap,
-} from "lucide-react";
+} from 'lucide-react';
+import { getPriceFormatado, getPriceFormatadoArray } from './lib/common';
 
-import { ComprarButton } from "@/app/components/ComprarButton";
-import Image from "next/image";
-import style from "@/app/styles/Home.module.css";
-import { SuporteButton } from "./components/SuporteButton";
+import { ComprarButton } from '@/app/components/ComprarButton';
+import style from '@/app/styles/Home.module.css';
+import Image from 'next/image';
+import { SuporteButton } from './components/SuporteButton';
 
 export default function App() {
   return (
     <div className={style.container}>
       {/* Grain overlay */}
-      <div className={style.grain} aria-hidden="true" />
+      <div className={style.grain} aria-hidden='true' />
 
       <main>
         {/* ── Hero ─────────────────────────────────── */}
         <section className={style.hero}>
-          <div className={style.heroBg} aria-hidden="true">
+          <div className={style.heroBg} aria-hidden='true'>
             <div className={style.heroBgGlow} />
             <div className={style.heroBgGrid} />
           </div>
@@ -50,7 +51,7 @@ export default function App() {
             </p>
 
             <div className={style.heroCta}>
-              <ComprarButton variant="primary" />
+              <ComprarButton variant='primary' />
               <SuporteButton />
               <div className={style.heroMeta}>
                 <span>✓ Entrega imediata</span>
@@ -67,15 +68,15 @@ export default function App() {
                   <span />
                 </div>
                 <Image
-                  src="/plics-sw-home.png"
+                  src='/plics-sw-home.png'
                   width={1000}
                   height={560}
-                  alt="Interface do Sistema Plics-SW Dashboard"
+                  alt='Interface do Sistema Plics-SW Dashboard'
                   className={style.dashboardImg}
                   priority
                 />
               </div>
-              <div className={style.dashboardGlow} aria-hidden="true" />
+              <div className={style.dashboardGlow} aria-hidden='true' />
             </div>
           </div>
         </section>
@@ -113,7 +114,7 @@ export default function App() {
                   Esqueça assinaturas e cobranças mensais. Você paga uma vez e o
                   sistema é seu para sempre — sem pegadinha.
                 </p>
-                <div className={style.featureCardGlow} aria-hidden="true" />
+                <div className={style.featureCardGlow} aria-hidden='true' />
               </div>
 
               <div className={style.featureCard}>
@@ -150,10 +151,10 @@ export default function App() {
                   <span />
                 </div>
                 <Image
-                  src="/mulher-usando-pdv.png"
+                  src='/mulher-usando-pdv.png'
                   width={1000}
                   height={560}
-                  alt="Interface do Sistema Plics-SW Dashboard"
+                  alt='Interface do Sistema Plics-SW Dashboard'
                   className={style.dashboardImg}
                   priority
                 />
@@ -166,7 +167,7 @@ export default function App() {
         <section className={style.benefits}>
           <div className={style.benefitsInner}>
             <h2 className={style.benefitsTitle}>
-              Conte com o PLICs SW para fazer a{" "}
+              Conte com o PLICs SW para fazer a{' '}
               <span className={style.heroAccent}>gestão completa</span>
               <br />
               do seu negócio
@@ -237,8 +238,8 @@ export default function App() {
                 </div>
                 <h3>Decisões Melhores</h3>
                 <p>
-                  Relatórios que te ajudam a ter uma visão analítica
-                  consolidada do seu negócio.
+                  Relatórios que te ajudam a ter uma visão analítica consolidada
+                  do seu negócio.
                 </p>
               </div>
             </div>
@@ -247,7 +248,7 @@ export default function App() {
 
         {/* ── Preço ────────────────────────────────── */}
         <section className={style.pricing}>
-          <div className={style.pricingBg} aria-hidden="true" />
+          <div className={style.pricingBg} aria-hidden='true' />
           <div className={style.pricingInner}>
             <div className={style.pricingLeft}>
               <div className={style.pricingLabel}>Oferta de lançamento</div>
@@ -279,19 +280,25 @@ export default function App() {
 
             <div className={style.pricingCard}>
               <div className={style.pricingCardInner}>
-                <span className={style.oldPrice}>De R$ 87,99</span>
+                <span className={style.oldPrice}>
+                  De {getPriceFormatado(process.env.NEXT_PUBLIC_PRECO_DE!)}
+                </span>
                 <div className={style.newPriceWrap}>
                   <span className={style.currency}>R$</span>
-                  <span className={style.newPrice}>34</span>
-                  <span className={style.cents}>,50</span>
+                  <span className={style.newPrice}>
+                    {getPriceFormatadoArray(process.env.NEXT_PUBLIC_PRECO!)[0]}
+                  </span>
+                  <span className={style.cents}>
+                    {getPriceFormatadoArray(process.env.NEXT_PUBLIC_PRECO!)[1]}
+                  </span>
                 </div>
                 <p className={style.priceNote}>pagamento único · via PIX</p>
-                <ComprarButton variant="accent" />
+                <ComprarButton variant='accent' />
                 <p className={style.priceSecurity}>
                   🔒 Pagamento seguro · Licença entregue na hora
                 </p>
               </div>
-              <div className={style.pricingCardGlow} aria-hidden="true" />
+              <div className={style.pricingCardGlow} aria-hidden='true' />
             </div>
           </div>
         </section>
@@ -300,16 +307,14 @@ export default function App() {
         <section className={style.testimonials}>
           <div className={style.testimonialsInner}>
             <div className={style.featuresSectionLabel}>Depoimentos</div>
-            <h2 className={style.featuresTitle}>
-              O que nossos clientes dizem
-            </h2>
+            <h2 className={style.featuresTitle}>O que nossos clientes dizem</h2>
 
             <div className={style.testimonialGrid}>
               <div className={style.testimonialCard}>
                 <div className={style.testimonialCardImg}>
                   <User size={32} />
                 </div>
-                <div className={style.testimonialQuote} aria-hidden="true">
+                <div className={style.testimonialQuote} aria-hidden='true'>
                   &ldquo;
                 </div>
                 <p className={style.testimonialText}>
@@ -329,7 +334,7 @@ export default function App() {
                 <div className={style.testimonialCardImg}>
                   <User size={32} />
                 </div>
-                <div className={style.testimonialQuote} aria-hidden="true">
+                <div className={style.testimonialQuote} aria-hidden='true'>
                   &ldquo;
                 </div>
                 <p className={style.testimonialText}>
@@ -341,14 +346,14 @@ export default function App() {
                   <strong>Carlos Oliveira</strong>
                   <span>Fundador da OFC Materiais</span>
                 </div>
-                <div className={style.testimonialCardGlow} aria-hidden="true" />
+                <div className={style.testimonialCardGlow} aria-hidden='true' />
               </div>
 
               <div className={style.testimonialCard}>
                 <div className={style.testimonialCardImg}>
                   <User size={32} />
                 </div>
-                <div className={style.testimonialQuote} aria-hidden="true">
+                <div className={style.testimonialQuote} aria-hidden='true'>
                   &ldquo;
                 </div>
                 <p className={style.testimonialText}>
