@@ -9,9 +9,12 @@ import { getPixService } from '@/app/lib/pixConfig';
 export async function createPixPayment(userId: string) {
   'use server';
 
+  const preco = Number(process.env.preco);
+  if(isNaN(preco) || preco === 0) throw new Error("Preço não configurado")
+
   try {
     const result = await getPixService().createPixPayment({
-      value: 34.5,
+      value: preco,
       description: 'Plics SW - Licença de Uso do Aplicativo',
       email: process.env.EMAIL || 'cliente@exemplo.com',
       firstName: 'Cliente',
