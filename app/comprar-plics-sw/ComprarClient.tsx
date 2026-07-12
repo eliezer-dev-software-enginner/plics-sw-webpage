@@ -1,21 +1,21 @@
 'use client';
 
+import { getUserId, savePaymentId, setUserId } from '@/app/lib/userId';
 import { CheckCircle, Copy, Download } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import {
   checkUserHasAccess,
   createPixPayment,
   grantTestAccess,
   syncPaymentStatus,
 } from './actions';
-import { getUserId, savePaymentId, setUserId } from '@/app/lib/userId';
-import { useEffect, useState } from 'react';
 
-import FalarComSuporteComponent from '../components/FalarComSuporte';
+import styles from '@/app/styles/comprar.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
-import PixPaymentHolder from './components/pix-payment-holder';
 import { PixPaymentResult } from 'pix-payment';
-import styles from '@/app/styles/comprar.module.css';
+import FalarComSuporteComponent from '../components/FalarComSuporte';
+import PixPaymentHolder from './components/pix-payment-holder';
 
 interface AccessData {
   hasAccess: boolean;
@@ -64,7 +64,6 @@ export default function ComprarClient({
     async function checkAccess() {
       try {
         let userId = userIdFromUrl || getUserId();
-        console.log('userId: ' + userId);
 
         if (!userId) {
           userId = getUserId();

@@ -9,8 +9,10 @@ import { getPixService } from '@/app/lib/pixConfig';
 export async function createPixPayment(userId: string) {
   'use server';
 
-  const preco = Number(process.env.preco);
-  if(isNaN(preco) || preco === 0) throw new Error("Preço não configurado")
+  const preco = Number(process.env.PRECO);
+  if (isNaN(preco) || preco === 0) throw new Error('Preço não configurado');
+
+  console.log('PRECO: ' + preco);
 
   try {
     const result = await getPixService().createPixPayment({
