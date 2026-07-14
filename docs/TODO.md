@@ -6,6 +6,7 @@
 
 ## Concluídas
 
+- [x] Verificar paymentId do localStorage ao acessar tela de pagamento (se expirado, gera novo)
 - [x] Adicionar seção "Benefícios" na LandingPage com conteúdo inspirado no bling.com.br
 - [x] Adicionar seção "Depoimentos" com cards de imagem (avatar com iniciais) + texto
 - [x] Adicionar timer de escassez (4min) + texto de persuasão na página de compra

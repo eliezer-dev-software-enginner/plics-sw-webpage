@@ -99,3 +99,28 @@ Técnica de conversão (escassez + prova social negativa) para aumentar a taxa d
 ### Arquivos Modificados
 - `app/comprar-plics-sw/ComprarClient.tsx` — adicionado `useEffect` com timer de 240s, estado `timeLeft`/`timerExpired`, UI do card de urgência, copy do anúncio, import do `Image` e banner
 - `app/styles/comprar.module.css` — estilos `.urgencyCard`, `.urgencyTimer`, `.urgencyText`, `.urgencyContent`, `.urgencyImageWrap`, `.urgencyTagline`; aumentado `max-width` do `.content` para 920px
+
+---
+
+## 005 — Verificar status do paymentId do localStorage ao acessar tela de pagamento
+
+**Data:** 2026-07-12
+**Status:** Implementado
+
+### Decisão
+Ao acessar a tela de pagamento sem `paymentId` na URL, primeiro consultar o `paymentId` salvo no localStorage. Se existir, verificar seu status via `syncPaymentStatus`. Se estiver expirado, gerar um novo pagamento e substituir no localStorage. Se estiver pendente, exibir o QR code existente. Se não houver paymentId salvo, criar um novo (comportamento anterior).
+
+### Motivo
+Evitar gerar pagamentos desnecessários quando o usuário retorna à tela de pagamento com um paymentId ainda válido salvo. Se o pagamento anterior expirou, automaticamente cria um novo e atualiza o localStorage.
+
+### Fluxo Resultante
+1. Usuário acessa `/comprar-plics-sw` sem `paymentId` na URL
+2. Código verifica localStorage por `plics_payment_id`
+3. Se encontrado → consulta status via `syncPaymentStatus`
+   - Aprovado → recarrega página (mostra tela de sucesso)
+   - Expirado → cria novo pagamento, salva novo paymentId no localStorage e na URL
+   - Pendente → exibe QR code do pagamento existente
+4. Se não encontrado no localStorage → cria pagamento novo (comportamento original)
+
+### Arquivos Modificados
+- `app/comprar-plics-sw/ComprarClient.tsx` — adicionado import de `getSavedPaymentId`, lógica de verificação no bloco `else` do `useEffect`

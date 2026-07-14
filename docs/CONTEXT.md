@@ -38,6 +38,7 @@ plics-sw-website/
 - **Dev**: `PixService` usa `EmulatorPixService` → HTTP para `localhost:3001`
 - **Prod**: `PixService` usa `MercadoPagoPixService` → SDK oficial
 - Webhook `/api/webhook` recebe notificações do emulador ou do MP real
+- Tela de pagamento verifica `paymentId` do localStorage antes de criar novo (se expirado, gera automaticamente)
 
 ## Projeto Relacionado
 
