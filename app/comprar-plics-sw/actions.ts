@@ -5,14 +5,34 @@
 import { getUserPurchases, grantUserAccess, savePayment } from '@/app/lib/db';
 
 import { getPixService } from '@/app/lib/pixConfig';
+import { UTM } from '../lib/common';
 
-export async function createPixPayment(userId: string) {
+export async function createPixPayment(userId: string, utm: UTM) {
   'use server';
 
   const preco = Number(process.env.PRECO);
   if (isNaN(preco) || preco === 0) throw new Error('Preço não configurado');
 
-  console.log('PRECO: ' + preco);
+  const params = new URLSearchParams();
+  params.set('userId', userId);
+
+  if (utm.source) {
+    params.set('utm_source', utm.source);
+  }
+
+  if (utm.medium) {
+    params.set('utm_medium', utm.medium);
+  }
+
+  if (utm.campaign) {
+    params.set('utm_campaign', utm.campaign);
+  }
+
+  if (utm.content) {
+    params.set('utm_content', utm.content);
+  }
+
+  const externalRef = params.toString();
 
   try {
     const result = await getPixService().createPixPayment({
@@ -21,7 +41,7 @@ export async function createPixPayment(userId: string) {
       email: process.env.EMAIL || 'cliente@exemplo.com',
       firstName: 'Cliente',
       lastName: 'PLICs',
-      externalRef: userId,
+      externalRef: externalRef,
       notificationUrl: `${process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')}/api/webhook`,
     });
 

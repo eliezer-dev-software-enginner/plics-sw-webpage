@@ -17,3 +17,34 @@ export function getPriceFormatadoArray(price: string) {
 
   return arr;
 }
+
+export type UTM = {
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  content?: string;
+};
+
+export function getUtmFromSearchParams(params: {
+  userId?: string;
+  test?: string;
+  paymentId?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+}) {
+  const source = params.utm_source;
+  const medium = params.utm_medium;
+  const campaign = params.utm_campaign;
+  const content = params.utm_content;
+
+  const utm: UTM = {
+    source,
+    medium,
+    campaign,
+    content,
+  };
+
+  return utm;
+}

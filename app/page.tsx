@@ -9,14 +9,30 @@ import {
   WifiOff,
   Zap,
 } from 'lucide-react';
-import { getPriceFormatado, getPriceFormatadoArray } from './lib/common';
+import {
+  getPriceFormatado,
+  getPriceFormatadoArray,
+  getUtmFromSearchParams,
+} from './lib/common';
 
 import { ComprarButton } from '@/app/components/ComprarButton';
 import style from '@/app/styles/Home.module.css';
 import Image from 'next/image';
 import { SuporteButton } from './components/SuporteButton';
 
-export default function App() {
+export default async function App({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const utm = getUtmFromSearchParams(params);
+
   return (
     <div className={style.container}>
       {/* Grain overlay */}
@@ -51,7 +67,7 @@ export default function App() {
             </p>
 
             <div className={style.heroCta}>
-              <ComprarButton variant='primary' />
+              <ComprarButton variant='primary' utm={utm} />
               <SuporteButton />
               <div className={style.heroMeta}>
                 <span>✓ Entrega imediata</span>
@@ -293,7 +309,7 @@ export default function App() {
                   </span>
                 </div>
                 <p className={style.priceNote}>pagamento único · via PIX</p>
-                <ComprarButton variant='accent' />
+                <ComprarButton variant='accent' utm={utm} />
                 <p className={style.priceSecurity}>
                   🔒 Pagamento seguro · Licença entregue na hora
                 </p>

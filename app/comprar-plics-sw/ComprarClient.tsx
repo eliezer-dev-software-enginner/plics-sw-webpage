@@ -1,6 +1,11 @@
 'use client';
 
-import { getSavedPaymentId, getUserId, savePaymentId, setUserId } from '@/app/lib/userId';
+import {
+  getSavedPaymentId,
+  getUserId,
+  savePaymentId,
+  setUserId,
+} from '@/app/lib/userId';
 import { CheckCircle, Copy, Download } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
@@ -15,6 +20,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { PixPaymentResult } from 'pix-payment';
 import FalarComSuporteComponent from '../components/FalarComSuporte';
+import { UTM } from '../lib/common';
 import PixPaymentHolder from './components/pix-payment-holder';
 
 interface AccessData {
@@ -28,10 +34,12 @@ export default function ComprarClient({
   testMode,
   initialPaymentId,
   userIdFromUrl,
+  utm,
 }: {
   testMode?: boolean;
   initialPaymentId?: string;
   userIdFromUrl?: string;
+  utm: UTM;
 }) {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
@@ -78,7 +86,6 @@ export default function ComprarClient({
         }
 
         const result = await checkUserHasAccess(userId || '');
-        console.log(result);
 
         if (result.hasAccess) {
           setHasAccess(true);
@@ -93,95 +100,13 @@ export default function ComprarClient({
 
         if (initialPaymentId) {
           savePaymentId(initialPaymentId);
-
-          const syncResult = await syncPaymentStatus(
-            initialPaymentId,
-            userId || '',
-          );
-
-          if (syncResult.accessGranted) {
-            savePaymentId(initialPaymentId);
-            window.location.reload();
-            return;
-          }
-
-          if (syncResult.isExpired) {
-            const pixResult = await createPixPayment(
-              userId || 'guest_' + Date.now(),
-            );
-            setPixData(pixResult);
-
-            const paymentId = pixResult.data?.paymentId;
-            if (paymentId) {
-              savePaymentId(paymentId);
-              const url = new URL(window.location.href);
-              url.searchParams.set('paymentId', paymentId);
-              window.history.replaceState({}, '', url.toString());
-            }
-          } else {
-            setPixData({
-              success: true,
-              error: null,
-              data: {
-                paymentId: initialPaymentId,
-                qrCodeBase64: syncResult.qrCodeBase64 ?? null,
-                qrCode: syncResult.qrCode ?? null,
-                status: syncResult.status || 'pending',
-              },
-            });
-          }
+          await loadPayment(initialPaymentId, userId || '');
         } else {
           const savedPaymentId = getSavedPaymentId();
-
           if (savedPaymentId) {
-            const syncResult = await syncPaymentStatus(
-              savedPaymentId,
-              userId || '',
-            );
-
-            if (syncResult.accessGranted) {
-              savePaymentId(savedPaymentId);
-              window.location.reload();
-              return;
-            }
-
-            if (syncResult.isExpired) {
-              const pixResult = await createPixPayment(
-                userId || 'guest_' + Date.now(),
-              );
-              setPixData(pixResult);
-              const newPaymentId = pixResult.data?.paymentId;
-              if (newPaymentId) {
-                savePaymentId(newPaymentId);
-                const url = new URL(window.location.href);
-                url.searchParams.set('paymentId', newPaymentId);
-                window.history.replaceState({}, '', url.toString());
-              }
-            } else {
-              setPixData({
-                success: true,
-                error: null,
-                data: {
-                  paymentId: savedPaymentId,
-                  qrCodeBase64: syncResult.qrCodeBase64 ?? null,
-                  qrCode: syncResult.qrCode ?? null,
-                  status: syncResult.status || 'pending',
-                },
-              });
-            }
+            await loadPayment(savedPaymentId, userId || '');
           } else {
-            const pixResult = await createPixPayment(
-              userId || 'guest_' + Date.now(),
-            );
-
-            setPixData(pixResult);
-            const paymentId = pixResult.data?.paymentId;
-            if (paymentId) {
-              savePaymentId(paymentId);
-              const url = new URL(window.location.href);
-              url.searchParams.set('paymentId', paymentId);
-              window.history.replaceState({}, '', url.toString());
-            }
+            await createNewPayment(userId);
           }
         }
       } catch (error: any) {
@@ -197,7 +122,8 @@ export default function ComprarClient({
 
   const handleCheckPayment = async () => {
     const paymentId = pixData?.data?.paymentId;
-    if (paymentId) return;
+
+    if (!paymentId) return;
 
     setCheckingPayment(true);
     const userId = getUserId();
@@ -297,6 +223,50 @@ export default function ComprarClient({
         </div>
       </div>
     );
+  }
+
+  async function loadPayment(paymentId: string, userId: string) {
+    const syncResult = await syncPaymentStatus(paymentId, userId);
+
+    if (syncResult.accessGranted) {
+      savePaymentId(paymentId);
+      window.location.reload();
+      return true;
+    }
+
+    if (syncResult.isExpired) {
+      await createNewPayment(userId);
+    } else {
+      setPixData({
+        success: true,
+        error: null,
+        data: {
+          paymentId,
+          qrCodeBase64: syncResult.qrCodeBase64 ?? null,
+          qrCode: syncResult.qrCode ?? null,
+          status: syncResult.status || 'pending',
+        },
+      });
+    }
+
+    return false;
+  }
+
+  async function createNewPayment(userId: string | null) {
+    const pixResult = await createPixPayment(
+      userId || `guest_${Date.now()}`,
+      utm,
+    );
+    setPixData(pixResult);
+
+    const paymentId = pixResult.data?.paymentId;
+    if (paymentId) {
+      savePaymentId(paymentId);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('paymentId', paymentId);
+      window.history.replaceState({}, '', url.toString());
+    }
   }
 
   return (

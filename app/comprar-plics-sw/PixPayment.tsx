@@ -5,6 +5,7 @@ import { CheckCircle, Copy } from 'lucide-react';
 import styles from '@/app/styles/PixPayment.module.css';
 import { PixPaymentResult } from 'pix-payment';
 import { toast } from 'react-toastify';
+import { getPriceFormatado } from '../lib/common';
 
 export default function PixPayment({
   pixData,
@@ -33,10 +34,6 @@ export default function PixPayment({
         </div>
       </div>
     );
-  }
-
-  function getPriceFormatado(price: string) {
-    return 'R$ ' + price?.replace('.', ',');
   }
 
   return (
