@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { ToastContainer } from 'react-toastify';
 import GoogleAnalytcs from './components/GoogleAnalytcs';
+import Header from './components/Header';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Header />
         <GoogleAnalytcs />
         {children}
         <ToastContainer />

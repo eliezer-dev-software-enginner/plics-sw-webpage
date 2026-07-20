@@ -10,6 +10,10 @@
     "dev:debug": "NODE_OPTIONS='--inspect' next dev"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.2.0",
+    "@mui/material": "^9.2.0",
     "@prisma/client": "^5.22.0",
     "axios": "1.12.2",
     "lucide-react": "^0.575.0",
