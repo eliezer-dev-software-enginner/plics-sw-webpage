@@ -37,6 +37,9 @@ export default async function App({
     <div className={style.container}>
       {/* Grain overlay */}
       <div className={style.grain} aria-hidden='true' />
+      <span className='verificador' style={{ display: 'none' }}>
+        {process.env.VERIFICADOR}
+      </span>
 
       <main>
         {/* ── Hero ─────────────────────────────────── */}
