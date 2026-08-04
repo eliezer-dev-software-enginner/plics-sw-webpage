@@ -18,7 +18,9 @@ export default async function App({
 
   return (
     <div className={style.container}>
-      <span>{process.env.VERIFICADOR}</span>
+      <span className='verificador' style={{ display: 'none' }}>
+        {process.env.VERIFICADOR}
+      </span>
       <ChildPresentation />
       <ChildMotivos />
     </div>
