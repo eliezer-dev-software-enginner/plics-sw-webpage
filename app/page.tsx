@@ -18,6 +18,7 @@ export default async function App({
 
   return (
     <div className={style.container}>
+      <span>{process.env.VERIFICADOR}</span>
       <ChildPresentation />
       <ChildMotivos />
     </div>
