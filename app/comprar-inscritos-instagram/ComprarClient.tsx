@@ -233,6 +233,8 @@ export default function ComprarClient({
       );
 
       setPixData(pixResult);
+      setShowConfirmModal(false);
+      setPhase('payment');
 
       const pid = pixResult.data?.paymentId;
 
@@ -243,12 +245,10 @@ export default function ComprarClient({
         url.searchParams.set('paymentId', pid);
         window.history.replaceState({}, '', url.toString());
 
-        const order = await getInstagramOrder(pid);
-        setOrderData(order);
+        getInstagramOrder(pid)
+          .then((order) => setOrderData(order))
+          .catch(() => {});
       }
-
-      setShowConfirmModal(false);
-      setPhase('payment');
     } catch (error: any) {
       setShowConfirmModal(false);
       setFormError(error.message || 'Erro ao gerar pagamento');
@@ -397,8 +397,8 @@ export default function ComprarClient({
   }
 
   if (phase === 'payment') {
-    const price = orderData?.amount ?? 0;
     const quantity = orderData?.quantity ?? selectedQuantity ?? 0;
+    const price = orderData?.amount ?? getTierByQuantity(quantity)?.price ?? 0;
 
     return (
       <div className={styles.container}>

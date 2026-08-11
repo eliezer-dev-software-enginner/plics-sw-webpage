@@ -11,15 +11,25 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    let body = await req.json();
+    const body = await req.json().catch(() => ({}));
 
-    const paymentId = body?.data?.id;
+    const searchParams = new URL(req.url).searchParams;
 
-    if (!paymentId)
-      return Response.json(
-        { error: 'paymentId não encontrado' },
-        { status: 400 },
-      );
+    const type = body?.type ?? searchParams.get('type');
+
+    // Mercado Pago também notifica outros tópicos (merchant_order, etc.) —
+    // ignora com 200 para não gerar erro nem reenvios.
+    if (type && type !== 'payment') {
+      return Response.json({ received: true, ignored: type });
+    }
+
+    // O id pode vir no body (data.id) ou na query string (?data.id=...)
+    const paymentId = body?.data?.id ?? searchParams.get('data.id');
+
+    if (!paymentId) {
+      console.log('⚠️ Webhook sem paymentId:', body);
+      return Response.json({ received: true, ignored: 'missing-payment-id' });
+    }
 
     const paymentIdStr = String(paymentId);
 
@@ -49,18 +59,29 @@ export async function POST(req: Request) {
       utmContent,
     });
 
-    //--------
+    const paymentData = await getPayment(paymentIdStr);
+
+    // O MP dispara a notificação assim que o PIX é criado — pode chegar antes
+    // do savePayment() do server action terminar. Nesse caso adia com 200 em
+    // vez de errar: a notificação de status aprovado (ou o polling do cliente)
+    // processa quando o registro existir.
+    if (!paymentData?.id) {
+      console.log(
+        '⏳ Pagamento ainda não registrado localmente, adiando:',
+        paymentIdStr,
+      );
+      return Response.json({ received: true, deferred: true });
+    }
+
     await updatePaymentStatus(paymentIdStr, novoStatus);
 
     if (novoStatus === 'approved') {
       console.log('✅ Pagamento aprovado:', paymentId);
 
-      const paymentData = await getPayment(paymentIdStr);
-
-      if (paymentData?.userId) {
-        if (paymentData.product === 'instagram-followers') {
-          await fulfillInstagramFollowersOrder(paymentIdStr);
-        } else {
+      if (paymentData.product === 'instagram-followers') {
+        await fulfillInstagramFollowersOrder(paymentIdStr);
+      } else {
+        if (paymentData.userId) {
           await grantUserAccess(paymentData.userId, paymentIdStr);
         }
       }
