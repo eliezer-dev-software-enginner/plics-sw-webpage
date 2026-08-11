@@ -1,6 +1,7 @@
 import { getPayment, grantUserAccess, updatePaymentStatus } from '@/app/lib/db';
 
 import { getPixService } from '@/app/lib/pixConfig';
+import { fulfillInstagramFollowersOrder } from '@/app/lib/smmFulfillment';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,7 +58,11 @@ export async function POST(req: Request) {
       const paymentData = await getPayment(paymentIdStr);
 
       if (paymentData?.userId) {
-        await grantUserAccess(paymentData.userId, paymentIdStr);
+        if (paymentData.product === 'instagram-followers') {
+          await fulfillInstagramFollowersOrder(paymentIdStr);
+        } else {
+          await grantUserAccess(paymentData.userId, paymentIdStr);
+        }
       }
     }
 

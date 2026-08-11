@@ -39,3 +39,20 @@ export function clearPaymentId(): void {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(PAYMENT_CACHE_KEY);
 }
+
+const IG_FOLLOWERS_PAYMENT_CACHE_KEY = 'plics_ig_followers_payment_id';
+
+export function saveInstagramFollowersPaymentId(paymentId: string): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(IG_FOLLOWERS_PAYMENT_CACHE_KEY, paymentId);
+}
+
+export function getSavedInstagramFollowersPaymentId(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(IG_FOLLOWERS_PAYMENT_CACHE_KEY);
+}
+
+export function clearInstagramFollowersPaymentId(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(IG_FOLLOWERS_PAYMENT_CACHE_KEY);
+}
