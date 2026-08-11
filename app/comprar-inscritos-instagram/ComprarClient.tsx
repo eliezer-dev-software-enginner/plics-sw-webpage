@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  clearInstagramFollowersPaymentId,
-  getSavedInstagramFollowersPaymentId,
-  getUserId,
-  saveInstagramFollowersPaymentId,
-  setUserId,
-} from '@/app/lib/userId';
+import { getUserId, setUserId } from '@/app/lib/userId';
 import { CheckCircle, Instagram } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
@@ -56,6 +50,10 @@ export default function ComprarClient({
   );
   const [refreshingStatus, setRefreshingStatus] = useState(false);
   const [testMode, setTestMode] = useState(false);
+  const [lastOrderPaymentId, setLastOrderPaymentId] = useState<string | null>(
+    null,
+  );
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     installTestModeConsoleFlag();
@@ -72,10 +70,8 @@ export default function ComprarClient({
           setUserId(userIdFromUrl);
         }
 
-        const pid = initialPaymentId || getSavedInstagramFollowersPaymentId();
-
-        if (pid) {
-          await loadPayment(pid);
+        if (initialPaymentId) {
+          await loadPayment(initialPaymentId);
         } else {
           setPhase('form');
         }
@@ -88,26 +84,25 @@ export default function ComprarClient({
     init();
   }, [initialPaymentId, userIdFromUrl]);
 
+  // Só usada no carregamento inicial (ex.: aba aberta com ?paymentId= já aprovado).
+  // Não redireciona para nova aba — se já está aprovado, mostra o sucesso aqui mesmo.
   async function loadPayment(pid: string) {
     setPaymentId(pid);
 
     const result = await syncInstagramPaymentStatus(pid);
 
     if (!result.success) {
-      clearInstagramFollowersPaymentId();
       setPhase('form');
       return;
     }
 
     if (result.accessGranted) {
-      saveInstagramFollowersPaymentId(pid);
       setOrderData((result.order as InstagramFollowersOrder) ?? null);
       setPhase('success');
       return;
     }
 
     if (result.isExpired) {
-      clearInstagramFollowersPaymentId();
       setPhase('form');
       return;
     }
@@ -126,11 +121,85 @@ export default function ComprarClient({
       },
     });
 
-    saveInstagramFollowersPaymentId(pid);
     setPhase('payment');
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  // Enquanto aguarda o PIX, verifica automaticamente a cada 5s — sem depender do clique manual.
+  useEffect(() => {
+    if (phase !== 'payment' || !paymentId) return;
+
+    const interval = setInterval(() => {
+      pollPaymentStatus();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [phase, paymentId]);
+
+  function buildOrderUrl(pid: string): string {
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('paymentId', pid);
+    return url.toString();
+  }
+
+  function openOrderInNewTab(pid: string) {
+    // Navegadores bloqueiam window.open() quando não há um gesto direto do
+    // usuário (ex.: disparado por setInterval) — por isso sempre deixamos um
+    // link de fallback visível em lastOrderPaymentId, caso o popup seja bloqueado.
+    window.open(buildOrderUrl(pid), '_blank');
+  }
+
+  // Limpa o pagamento/pedido em andamento. `keepFormValues` mantém a quantidade e o
+  // link já preenchidos (caso de pagamento expirado — o usuário só precisa gerar um
+  // novo PIX). Sem isso, também zera o formulário (caso de compra concluída).
+  function resetPaymentState(keepFormValues: boolean) {
+    setPhase('form');
+    setPaymentId(null);
+    setPixData(null);
+    setOrderData(null);
+    setErrorMessage('');
+
+    if (!keepFormValues) {
+      setSelectedQuantity(null);
+      setInstagramLink('');
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete('paymentId');
+    window.history.replaceState({}, '', url.toString());
+  }
+
+  function resetToForm() {
+    resetPaymentState(false);
+  }
+
+  async function pollPaymentStatus() {
+    if (!paymentId) return;
+    const pid = paymentId;
+
+    const result = await syncInstagramPaymentStatus(pid);
+
+    if (result.accessGranted) {
+      toast.success(
+        'Pagamento confirmado! Abrimos os detalhes do pedido em uma nova aba.',
+        { position: 'bottom-center', autoClose: 4000 },
+      );
+      openOrderInNewTab(pid);
+      resetToForm();
+      setLastOrderPaymentId(pid);
+      return;
+    }
+
+    if (result.isExpired) {
+      toast.error(
+        'O pagamento PIX expirou. Gere um novo pagamento para continuar.',
+        { position: 'bottom-center', autoClose: 4000 },
+      );
+      resetPaymentState(true);
+    }
+  }
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError('');
 
@@ -143,6 +212,12 @@ export default function ComprarClient({
       setFormError('Informe o link ou @usuário do seu perfil do Instagram');
       return;
     }
+
+    setShowConfirmModal(true);
+  }
+
+  async function confirmAndPay() {
+    if (!selectedQuantity) return;
 
     setSubmitting(true);
 
@@ -162,7 +237,6 @@ export default function ComprarClient({
       const pid = pixResult.data?.paymentId;
 
       if (pid) {
-        saveInstagramFollowersPaymentId(pid);
         setPaymentId(pid);
 
         const url = new URL(window.location.href);
@@ -173,8 +247,10 @@ export default function ComprarClient({
         setOrderData(order);
       }
 
+      setShowConfirmModal(false);
       setPhase('payment');
     } catch (error: any) {
+      setShowConfirmModal(false);
       setFormError(error.message || 'Erro ao gerar pagamento');
     } finally {
       setSubmitting(false);
@@ -182,18 +258,8 @@ export default function ComprarClient({
   }
 
   const handleCheckPayment = async () => {
-    if (!paymentId) return;
-
     setCheckingPayment(true);
-    const result = await syncInstagramPaymentStatus(paymentId);
-
-    if (result.accessGranted) {
-      setOrderData((result.order as InstagramFollowersOrder) ?? null);
-      setPhase('success');
-      setCheckingPayment(false);
-      return;
-    }
-
+    await pollPaymentStatus();
     setCheckingPayment(false);
   };
 
@@ -412,6 +478,25 @@ export default function ComprarClient({
         </div>
 
         <div className={styles.wrapper}>
+          {lastOrderPaymentId && (
+            <div className={styles.completedNotice}>
+              <span>✅ Pedido enviado!</span>
+              <span>
+                Se a nova aba não abriu automaticamente,{' '}
+                <a
+                  href={buildOrderUrl(lastOrderPaymentId)}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className={styles.completedLink}
+                  onClick={() => setLastOrderPaymentId(null)}
+                >
+                  clique aqui para ver os detalhes
+                </a>
+                .
+              </span>
+            </div>
+          )}
+
           <div className={styles.bannerWrap}>
             <Image
               src='/instagram-comprar-inscritos.png'
@@ -472,16 +557,10 @@ export default function ComprarClient({
 
             {formError && <p className={styles.formError}>{formError}</p>}
 
-            <button
-              type='submit'
-              className={styles.submitButton}
-              disabled={submitting}
-            >
-              {submitting
-                ? 'Gerando pagamento...'
-                : selectedQuantity
-                  ? `Pagar ${formatBRL(getTierByQuantity(selectedQuantity)?.price ?? 0)} via PIX`
-                  : 'Continuar'}
+            <button type='submit' className={styles.submitButton}>
+              {selectedQuantity
+                ? `Pagar ${formatBRL(getTierByQuantity(selectedQuantity)?.price ?? 0)} via PIX`
+                : 'Continuar'}
             </button>
           </form>
 
@@ -496,6 +575,44 @@ export default function ComprarClient({
           <FalarComSuporteComponent />
         </div>
       </div>
+
+      {showConfirmModal && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => !submitting && setShowConfirmModal(false)}
+        >
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            <h3 className={styles.modalTitle}>Confirme o perfil</h3>
+            <p className={styles.modalText}>
+              Vamos entregar{' '}
+              <strong>
+                {selectedQuantity?.toLocaleString('pt-BR')} inscritos
+              </strong>{' '}
+              para o perfil abaixo. Depois do pagamento não é possível
+              alterar o link.
+            </p>
+            <div className={styles.modalLinkBox}>{instagramLink}</div>
+            <div className={styles.modalActions}>
+              <button
+                type='button'
+                className={styles.modalSecondaryButton}
+                onClick={() => setShowConfirmModal(false)}
+                disabled={submitting}
+              >
+                Corrigir link
+              </button>
+              <button
+                type='button'
+                className={styles.modalPrimaryButton}
+                onClick={confirmAndPay}
+                disabled={submitting}
+              >
+                {submitting ? 'Gerando pagamento...' : 'Confirmar e pagar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

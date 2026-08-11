@@ -190,6 +190,120 @@
 }
 
 /* ===========================
+   Modal de confirmação do perfil
+=========================== */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 420px;
+  background: #17141d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f0f0f5;
+  margin: 0;
+}
+
+.modalText {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modalText strong {
+  color: #f0f0f5;
+}
+
+.modalLinkBox {
+  padding: 0.75rem 1rem;
+  background: rgba(217, 70, 239, 0.08);
+  border: 1px solid rgba(217, 70, 239, 0.3);
+  border-radius: 10px;
+  color: #f0abfc;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.modalActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.modalSecondaryButton {
+  flex: 1;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  color: #e5e7eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modalSecondaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modalPrimaryButton {
+  flex: 1;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #d946ef, #a21caf);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modalPrimaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===========================
+   Aviso de pedido concluído (fallback caso o navegador bloqueie o popup)
+=========================== */
+.completedNotice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.85rem;
+  color: #d1fae5;
+}
+
+.completedLink {
+  color: #34d399;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ===========================
    Banner
 =========================== */
 .bannerWrap {
