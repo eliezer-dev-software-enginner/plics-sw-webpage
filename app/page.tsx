@@ -16,6 +16,9 @@ import {
 } from './lib/common';
 
 import { ComprarButton } from '@/app/components/ComprarButton';
+import { InstagramComprarButton } from '@/app/components/InstagramComprarButton';
+import { InstagramFollowersPopup } from '@/app/components/InstagramFollowersPopup';
+import { FOLLOWERS_TIERS, formatBRL } from '@/app/comprar-inscritos-instagram/constants';
 import style from '@/app/styles/Home.module.css';
 import Image from 'next/image';
 import { SuporteButton } from './components/SuporteButton';
@@ -40,6 +43,8 @@ export default async function App({
       <span className='verificador' style={{ display: 'none' }}>
         {process.env.VERIFICADOR}
       </span>
+
+      <InstagramFollowersPopup utm={utm} />
 
       <main>
         {/* ── Hero ─────────────────────────────────── */}
@@ -265,6 +270,26 @@ export default async function App({
           </div>
         </section>
 
+        {/* ── Playlist tutoriais YouTube ─────────────── */}
+        <section className={style.ytbBanner}>
+          <div className={style.ytbBannerInner}>
+            <a
+              href='https://youtube.com/playlist?list=PLG06evrpS2RlBbxDBYcDkVKpWrEoSy8tq&si=XuQaWse78EawLMBd'
+              target='_blank'
+              rel='noopener noreferrer'
+              className={style.ytbBannerLink}
+            >
+              <Image
+                src='/banner_convite_playlist_ytb.png'
+                width={1983}
+                height={793}
+                alt='Assista à playlist completa de tutoriais do Plics SW no YouTube'
+                className={style.ytbBannerImage}
+              />
+            </a>
+          </div>
+        </section>
+
         {/* ── Preço ────────────────────────────────── */}
         <section className={style.pricing}>
           <div className={style.pricingBg} aria-hidden='true' />
@@ -318,6 +343,47 @@ export default async function App({
                 </p>
               </div>
               <div className={style.pricingCardGlow} aria-hidden='true' />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Instagram cross-sell ─────────────────── */}
+        <section className={style.instagram}>
+          <div className={style.instagramInner}>
+            <div className={style.instagramImageWrap}>
+              <Image
+                src='/instagram-comprar-inscritos.png'
+                width={600}
+                height={600}
+                alt='Compre inscritos para Instagram'
+                className={style.instagramImage}
+              />
+            </div>
+
+            <div>
+              <div className={style.instagramLabel}>Novidade</div>
+              <h2 className={style.instagramTitle}>
+                Compre inscritos para o seu Instagram
+              </h2>
+              <p className={style.instagramText}>
+                Aumente a credibilidade do seu perfil com entrega gradual e
+                segura, pagando via PIX. Sem senha, sem assinatura.
+              </p>
+
+              <ul className={style.instagramPriceList}>
+                {FOLLOWERS_TIERS.map((tier) => (
+                  <li key={tier.quantity}>
+                    <span className={style.instagramPriceQuantity}>
+                      {tier.quantity.toLocaleString('pt-BR')} inscritos
+                    </span>
+                    <span className={style.instagramPriceValue}>
+                      {formatBRL(tier.price)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <InstagramComprarButton utm={utm} />
             </div>
           </div>
         </section>

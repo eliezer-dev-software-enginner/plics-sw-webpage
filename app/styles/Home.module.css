@@ -798,6 +798,167 @@
   }
 }
 
+/* ── Playlist tutoriais YouTube ────────────────────────── */
+.ytbBanner {
+  padding: 4rem 1.5rem;
+  background: #ffffff;
+}
+
+.ytbBannerInner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ytbBannerLink {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -20px rgba(28, 26, 22, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.ytbBannerLink:hover {
+  transform: translateY(-2px);
+}
+
+.ytbBannerImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Instagram cross-sell ──────────────────────────────── */
+.instagram {
+  padding: 6rem 1.5rem;
+  background: #1c1a16;
+  overflow: hidden;
+}
+
+.instagramInner {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+@media (max-width: 860px) {
+  .instagramInner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+}
+
+.instagramImageWrap {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -20px rgba(217, 70, 239, 0.35);
+}
+
+.instagramImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.instagramLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  background: rgba(217, 70, 239, 0.15);
+  border: 1px solid rgba(217, 70, 239, 0.35);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f0abfc;
+  margin-bottom: 1rem;
+}
+
+.instagramTitle {
+  font-family: "DM Serif Display", Georgia, serif;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: #faf9f6;
+  margin: 0 0 1rem;
+}
+
+.instagramText {
+  font-size: 0.95rem;
+  color: #b8b3a8;
+  line-height: 1.7;
+  margin: 0 0 1.5rem;
+  max-width: 460px;
+}
+
+@media (max-width: 860px) {
+  .instagramText {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.instagramPriceList {
+  list-style: none;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 0.5rem 1.25rem;
+}
+
+@media (max-width: 860px) {
+  .instagramPriceList {
+    grid-template-columns: repeat(2, auto);
+    justify-content: center;
+  }
+}
+
+.instagramPriceList li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.instagramPriceQuantity {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #faf9f6;
+}
+
+.instagramPriceValue {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #f0abfc;
+}
+
+.instagramButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.75rem;
+  background: linear-gradient(135deg, #d946ef, #a21caf);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.instagramButton:hover {
+  transform: translateY(-1px);
+}
+
 /* ── Versatilidade ─────────────────────────────────────── */
 .versatilidade {
   padding: 6rem 1.5rem;
