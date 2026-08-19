@@ -4,6 +4,7 @@
 
 import { getUserPurchases, grantUserAccess, savePayment } from '@/app/lib/db';
 
+import { getLatestRelease } from '@/app/lib/githubRelease';
 import { getPixService } from '@/app/lib/pixConfig';
 import { UTM } from '../lib/common';
 
@@ -119,13 +120,14 @@ export async function checkUserHasAccess(userId: string) {
   try {
     const purchases = await getUserPurchases(userId);
     const hasAccess = purchases && purchases.length > 0;
+    const release = hasAccess ? await getLatestRelease() : null;
 
     return {
       success: true,
       hasAccess,
       license: hasAccess ? process.env.LICENSA_APP : null,
-      downloadWindows: process.env.DOWNLOAD_WINDOWS || null,
-      downloadLinux: process.env.DOWNLOAD_LINUX || null,
+      downloadWindows: release?.downloadWindows ?? null,
+      downloadLinux: release?.downloadLinux ?? null,
     };
   } catch (error: any) {
     console.error('Erro ao verificar acesso:', error);

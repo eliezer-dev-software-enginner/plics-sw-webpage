@@ -16,6 +16,8 @@ import {
 } from './lib/common';
 
 import { ComprarButton } from '@/app/components/ComprarButton';
+import { DownloadApp } from '@/app/components/DownloadApp';
+import { Header } from '@/app/components/Header';
 import { InstagramComprarButton } from '@/app/components/InstagramComprarButton';
 import { InstagramFollowersPopup } from '@/app/components/InstagramFollowersPopup';
 import { FOLLOWERS_TIERS, formatBRL } from '@/app/comprar-inscritos-instagram/constants';
@@ -46,12 +48,13 @@ export default async function App({
 
       <InstagramFollowersPopup utm={utm} />
 
+      <Header />
+
       <main>
         {/* ── Hero ─────────────────────────────────── */}
         <section className={style.hero}>
           <div className={style.heroBg} aria-hidden='true'>
             <div className={style.heroBgGlow} />
-            <div className={style.heroBgGrid} />
           </div>
 
           <div className={style.heroInner}>
@@ -104,6 +107,9 @@ export default async function App({
             </div>
           </div>
         </section>
+
+        {/* ── Download livre ──────────────────────────── */}
+        <DownloadApp />
 
         {/* ── Vantagens ────────────────────────────── */}
         <section className={style.features}>

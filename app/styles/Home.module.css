@@ -3,11 +3,8 @@
    Aesthetic: Light editorial · warm paper · sharp contrast
 ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap");
-
 /* ── Reset / Base ──────────────────────────────────────── */
 .container {
-  font-family: "DM Sans", system-ui, sans-serif;
   background: #faf9f6;
   color: #1c1a16;
   line-height: 1.6;
@@ -53,24 +50,10 @@
   height: 600px;
   background: radial-gradient(
     ellipse at center,
-    rgba(202, 138, 4, 0.08) 0%,
+    rgba(37, 99, 235, 0.08) 0%,
     transparent 65%
   );
   pointer-events: none;
-}
-
-.heroBgGrid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(28, 26, 22, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(28, 26, 22, 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    black 30%,
-    transparent 100%
-  );
 }
 
 .heroInner {
@@ -115,8 +98,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #ca8a04;
-  box-shadow: 0 0 8px rgba(202, 138, 4, 0.6);
+  background: #2563eb;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
   animation: blink 2s ease-in-out infinite;
 }
 
@@ -131,7 +114,6 @@
 }
 
 .heroTitle {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: clamp(2.75rem, 6vw, 5rem);
   font-weight: 400;
   line-height: 1.1;
@@ -142,7 +124,7 @@
 }
 
 .heroAccent {
-  color: #ca8a04;
+  color: #2563eb;
   font-style: italic;
 }
 
@@ -186,18 +168,18 @@
   border-radius: 16px;
   overflow: hidden;
   background: #f0ede6;
-  border: 1px solid rgba(202, 138, 4, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.12);
   box-shadow:
     0 20px 60px -16px rgba(28, 26, 22, 0.2),
-    0 0 100px -20px rgba(202, 138, 4, 0.1);
+    0 0 100px -20px rgba(37, 99, 235, 0.1);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .dashboardWrap:hover .dashboardFrame {
-  border-color: rgba(202, 138, 4, 0.3);
+  border-color: rgba(37, 99, 235, 0.3);
   box-shadow:
     0 24px 72px -16px rgba(28, 26, 22, 0.25),
-    0 0 120px -16px rgba(202, 138, 4, 0.15);
+    0 0 120px -16px rgba(37, 99, 235, 0.15);
 }
 
 .dashboardBar {
@@ -242,7 +224,7 @@
   height: 180px;
   background: radial-gradient(
     ellipse,
-    rgba(202, 138, 4, 0.08) 0%,
+    rgba(37, 99, 235, 0.08) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -265,13 +247,12 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #ca8a04;
+  color: #2563eb;
   margin-bottom: 1rem;
   text-align: center;
 }
 
 .featuresTitle {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: clamp(1.75rem, 3.5vw, 2.75rem);
   font-weight: 400;
   line-height: 1.2;
@@ -335,7 +316,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #ca8a04, transparent);
+  background: linear-gradient(90deg, transparent, #2563eb, transparent);
 }
 
 .featureCardGlow {
@@ -347,7 +328,7 @@
   height: 120px;
   background: radial-gradient(
     ellipse,
-    rgba(202, 138, 4, 0.06) 0%,
+    rgba(37, 99, 235, 0.06) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -360,14 +341,13 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(202, 138, 4, 0.08);
-  border: 1px solid rgba(202, 138, 4, 0.2);
-  color: #ca8a04;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #2563eb;
   margin-bottom: 1.25rem;
 }
 
 .featureCard h3 {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: 1.3rem;
   font-weight: 400;
   color: #1c1a16;
@@ -395,7 +375,6 @@
 }
 
 .benefitsTitle {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: clamp(1.75rem, 3.5vw, 2.75rem);
   font-weight: 400;
   line-height: 1.2;
@@ -441,7 +420,7 @@
 
 .benefitCard:hover {
   background: #f5f3ee;
-  border-color: rgba(202, 138, 4, 0.2);
+  border-color: rgba(37, 99, 235, 0.2);
   transform: translateY(-2px);
 }
 
@@ -452,14 +431,13 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(202, 138, 4, 0.08);
-  border: 1px solid rgba(202, 138, 4, 0.2);
-  color: #ca8a04;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #2563eb;
   margin: 0 auto 1.25rem;
 }
 
 .benefitCard h3 {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: 1.2rem;
   font-weight: 400;
   color: #1c1a16;
@@ -521,7 +499,7 @@
 
 .testimonialCard:hover {
   transform: translateY(-3px);
-  border-color: rgba(202, 138, 4, 0.2);
+  border-color: rgba(37, 99, 235, 0.2);
 }
 
 .testimonialCardHighlight {
@@ -535,7 +513,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #ca8a04, transparent);
+  background: linear-gradient(90deg, transparent, #2563eb, transparent);
 }
 
 .testimonialCardGlow {
@@ -547,7 +525,7 @@
   height: 120px;
   background: radial-gradient(
     ellipse,
-    rgba(202, 138, 4, 0.06) 0%,
+    rgba(37, 99, 235, 0.06) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -564,7 +542,7 @@
 }
 
 .testimonialCard:nth-child(1) .testimonialCardImg {
-  background: linear-gradient(135deg, #ca8a04, #eab308, #fbbf24);
+  background: linear-gradient(135deg, #0f766e, #14b8a6, #5eead4);
 }
 
 .testimonialCard:nth-child(2) .testimonialCardImg {
@@ -576,10 +554,9 @@
 }
 
 .testimonialQuote {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: 3rem;
   line-height: 0.6;
-  color: #ca8a04;
+  color: #2563eb;
   opacity: 0.25;
   margin-bottom: 0.75rem;
   user-select: none;
@@ -600,7 +577,6 @@
 
 .testimonialAuthor strong {
   display: block;
-  font-family: "DM Sans", system-ui, sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
   color: #1c1a16;
@@ -626,7 +602,7 @@
   inset: 0;
   background: radial-gradient(
     ellipse 80% 60% at 70% 50%,
-    rgba(202, 138, 4, 0.06) 0%,
+    rgba(37, 99, 235, 0.06) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -655,12 +631,11 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #ca8a04;
+  color: #2563eb;
   margin-bottom: 1rem;
 }
 
 .pricingTitle {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: clamp(2rem, 3.5vw, 3rem);
   font-weight: 400;
   line-height: 1.15;
@@ -694,7 +669,7 @@
 }
 
 .pricingPerks li svg {
-  color: #ca8a04;
+  color: #2563eb;
   flex-shrink: 0;
 }
 
@@ -708,7 +683,7 @@
   z-index: 1;
   background: #ffffff;
   border: 1px solid rgba(28, 26, 22, 0.1);
-  border-top-color: rgba(202, 138, 4, 0.4);
+  border-top-color: rgba(37, 99, 235, 0.4);
   border-radius: 20px;
   padding: 2.5rem 2rem;
   text-align: center;
@@ -725,7 +700,7 @@
   border-radius: 21px;
   background: radial-gradient(
     ellipse at 50% 0%,
-    rgba(202, 138, 4, 0.06) 0%,
+    rgba(37, 99, 235, 0.06) 0%,
     transparent 60%
   );
   pointer-events: none;
@@ -748,24 +723,21 @@
 }
 
 .currency {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: 1.5rem;
-  color: #ca8a04;
+  color: #2563eb;
   margin-top: 0.5rem;
 }
 
 .newPrice {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: 5rem;
-  color: #ca8a04;
+  color: #2563eb;
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .cents {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: 2rem;
-  color: #ca8a04;
+  color: #2563eb;
   margin-top: 0.75rem;
   opacity: 0.8;
 }
@@ -882,7 +854,6 @@
 }
 
 .instagramTitle {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: clamp(1.75rem, 3.2vw, 2.5rem);
   font-weight: 400;
   line-height: 1.2;
@@ -972,7 +943,6 @@
 }
 
 .versatilidadeTitle {
-  font-family: "DM Serif Display", Georgia, serif;
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   color: #1c1a16;
   margin-bottom: 1.5rem;
@@ -996,16 +966,16 @@
   border-radius: 16px;
   overflow: hidden;
   background: #f0ede6;
-  border: 1px solid rgba(202, 138, 4, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.12);
   box-shadow:
     0 20px 60px -16px rgba(28, 26, 22, 0.2),
-    0 0 100px -20px rgba(202, 138, 4, 0.1);
+    0 0 100px -20px rgba(37, 99, 235, 0.1);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .versatilidadeCardFrame:hover {
-  border-color: rgba(202, 138, 4, 0.3);
+  border-color: rgba(37, 99, 235, 0.3);
   box-shadow:
     0 24px 72px -16px rgba(28, 26, 22, 0.25),
-    0 0 120px -16px rgba(202, 138, 4, 0.15);
+    0 0 120px -16px rgba(37, 99, 235, 0.15);
 }
