@@ -1,5 +1,4 @@
-import { Download } from 'lucide-react';
-
+import { DownloadButtons } from '@/app/components/DownloadButtons';
 import { getLatestRelease } from '@/app/lib/githubRelease';
 import styles from '@/app/styles/download.module.css';
 
@@ -22,39 +21,7 @@ export async function DownloadApp() {
           sua licença vitalícia quando quiser liberar o uso completo.
         </p>
 
-        <div className={styles.grid}>
-          {release.downloadWindows && (
-            <a
-              href={release.downloadWindows}
-              className={styles.button}
-              rel='noopener noreferrer'
-            >
-              <div className={styles.iconWrap}>
-                <Download size={20} />
-              </div>
-              <div className={styles.buttonText}>
-                <span className={styles.buttonLabel}>Download</span>
-                <span className={styles.buttonPlatform}>Windows (.msi)</span>
-              </div>
-            </a>
-          )}
-
-          {release.downloadLinux && (
-            <a
-              href={release.downloadLinux}
-              className={styles.button}
-              rel='noopener noreferrer'
-            >
-              <div className={styles.iconWrap}>
-                <Download size={20} />
-              </div>
-              <div className={styles.buttonText}>
-                <span className={styles.buttonLabel}>Download</span>
-                <span className={styles.buttonPlatform}>Linux (.deb)</span>
-              </div>
-            </a>
-          )}
-        </div>
+        <DownloadButtons release={release} />
 
         {release.version && (
           <p className={styles.version}>Versão {release.version}</p>
