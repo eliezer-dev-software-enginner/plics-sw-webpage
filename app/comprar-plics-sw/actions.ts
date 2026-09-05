@@ -1,53 +1,71 @@
 //app/comprar-plics-sw/actions.tsx
 
-"use server";
+'use server';
 
-import { getUserPurchases, grantUserAccess, savePayment } from "@/app/lib/db";
+import { getUserPurchases, grantUserAccess, savePayment } from '@/app/lib/db';
 
-import { getPixService } from "@/app/lib/pixConfig";
+import { getLatestRelease } from '@/app/lib/githubRelease';
+import { getPixService } from '@/app/lib/pixConfig';
+import { UTM } from '../lib/common';
 
-export async function createPixPayment(userId: string) {
-  "use server";
+export async function createPixPayment(userId: string, utm: UTM) {
+  'use server';
+
+  const preco = Number(process.env.PRECO);
+  if (isNaN(preco) || preco === 0) throw new Error('Preço não configurado');
+
+  const params = new URLSearchParams();
+  params.set('userId', userId);
+
+  if (utm.source) {
+    params.set('utm_source', utm.source);
+  }
+
+  if (utm.medium) {
+    params.set('utm_medium', utm.medium);
+  }
+
+  if (utm.campaign) {
+    params.set('utm_campaign', utm.campaign);
+  }
+
+  if (utm.content) {
+    params.set('utm_content', utm.content);
+  }
+
+  const externalRef = params.toString();
 
   try {
     const result = await getPixService().createPixPayment({
-      value: 34.5,
-      description: "PLICs - Licença de Uso do Aplicativo",
-      email: process.env.EMAIL || "cliente@exemplo.com",
-      firstName: "Cliente",
-      lastName: "PLICs",
-      externalRef: userId,
-      notificationUrl: `${process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")}/api/webhook`,
+      value: preco,
+      description: 'Plics SW - Licença de Uso do Aplicativo',
+      email: process.env.EMAIL || 'cliente@exemplo.com',
+      firstName: 'Cliente',
+      lastName: 'PLICs',
+      externalRef: externalRef,
+      notificationUrl: `${process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')}/api/webhook`,
     });
 
     if (!result.success || !result.data) {
-      return { success: false, error: result.error || "Erro ao criar pagamento" };
+      throw new Error(result.error || 'Erro ao criar pagamento');
     }
 
-    const { paymentId, status, qrCodeBase64, qrCode } = result.data;
+    const { paymentId, status } = result.data;
 
-    if (paymentId && paymentId !== "undefined") {
+    if (paymentId && paymentId !== 'undefined') {
       await savePayment(paymentId, userId, status);
     }
 
-    return {
-      success: true,
-      paymentId,
-      qrCodeBase64,
-      qrCode,
-      status,
-    };
+    return result;
   } catch (error: any) {
-    console.error("Erro ao criar pagamento PIX:", error);
-    return {
-      success: false,
-      error: error.message || "Erro ao criar pagamento",
-    };
+    console.error('Erro ao criar pagamento PIX:', error);
+
+    throw new Error(error.message || 'Erro ao criar pagamento');
   }
 }
 
 export async function checkPaymentStatus(paymentId: string) {
-  "use server";
+  'use server';
 
   try {
     const result = await getPixService().getPaymentById(paymentId);
@@ -57,7 +75,7 @@ export async function checkPaymentStatus(paymentId: string) {
       status: result.status,
     };
   } catch (error: any) {
-    console.error("Erro ao verificar pagamento:", error);
+    console.error('Erro ao verificar pagamento:', error);
     return {
       success: false,
       error: error.message,
@@ -66,50 +84,53 @@ export async function checkPaymentStatus(paymentId: string) {
 }
 
 export async function syncPaymentStatus(paymentId: string, userId: string) {
-  "use server";
+  'use server';
 
   try {
     const result = await getPixService().getPaymentById(paymentId);
     const status = result.status;
     const transactionData = result.point_of_interaction?.transaction_data;
 
-    if (status === "approved") {
+    if (status === 'approved') {
       await grantUserAccess(userId, paymentId);
       return { success: true, status, accessGranted: true };
     }
 
-    const isExpired = status !== "pending" && status !== "in_process";
+    const isExpired = status !== 'pending' && status !== 'in_process';
 
     return {
       success: true,
       status,
       accessGranted: false,
       isExpired,
-      qrCodeBase64: isExpired ? null : (transactionData?.qr_code_base64 ?? null),
+      qrCodeBase64: isExpired
+        ? null
+        : (transactionData?.qr_code_base64 ?? null),
       qrCode: isExpired ? null : (transactionData?.qr_code ?? null),
     };
   } catch (error: any) {
-    console.error("Erro ao sincronizar pagamento:", error);
+    console.error('Erro ao sincronizar pagamento:', error);
     return { success: false, error: error.message };
   }
 }
 
 export async function checkUserHasAccess(userId: string) {
-  "use server";
+  'use server';
 
   try {
     const purchases = await getUserPurchases(userId);
     const hasAccess = purchases && purchases.length > 0;
+    const release = hasAccess ? await getLatestRelease() : null;
 
     return {
       success: true,
       hasAccess,
       license: hasAccess ? process.env.LICENSA_APP : null,
-      downloadWindows: process.env.DOWNLOAD_WINDOWS || null,
-      downloadLinux: process.env.DOWNLOAD_LINUX || null,
+      downloadWindows: release?.downloadWindows ?? null,
+      downloadLinux: release?.downloadLinux ?? null,
     };
   } catch (error: any) {
-    console.error("Erro ao verificar acesso:", error);
+    console.error('Erro ao verificar acesso:', error);
     return {
       success: false,
       hasAccess: false,
@@ -119,13 +140,13 @@ export async function checkUserHasAccess(userId: string) {
 }
 
 export async function grantTestAccess(userId: string) {
-  "use server";
+  'use server';
 
   try {
-    await grantUserAccess(userId, "test_payment_" + Date.now());
+    await grantUserAccess(userId, 'test_payment_' + Date.now());
     return { success: true };
   } catch (error: any) {
-    console.error("Erro ao criar acesso de teste:", error);
+    console.error('Erro ao criar acesso de teste:', error);
     return { success: false, error: error.message };
   }
 }

@@ -41,6 +41,15 @@
   margin-bottom: 1rem;
 }
 
+@media (max-width: 600px) {
+  .button {
+    display: flex;
+    flex-direction: row;
+    font-size: 0.5em;
+    white-space: nowrap;
+  }
+}
+
 .button:hover {
   transform: scale(1.05);
 }

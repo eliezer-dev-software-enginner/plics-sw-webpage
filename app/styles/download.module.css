@@ -1,0 +1,105 @@
+.section {
+  padding: 5.5rem 1.5rem;
+  background: #ffffff;
+  text-align: center;
+}
+
+.inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2563eb;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: #1c1a16;
+  margin: 0 0 1rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #78716c;
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.grid {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.5rem;
+  min-width: 230px;
+  background: #faf9f6;
+  border: 1px solid rgba(28, 26, 22, 0.1);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  text-align: left;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.button:hover {
+  background: #f5f3ee;
+  border-color: rgba(37, 99, 235, 0.35);
+  transform: translateY(-2px);
+}
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.buttonText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.buttonLabel {
+  font-size: 0.7rem;
+  color: #a8a29e;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.buttonPlatform {
+  font-size: 0.975rem;
+  font-weight: 600;
+  color: #1c1a16;
+}
+
+.version {
+  margin-top: 1.75rem;
+  font-size: 0.8rem;
+  color: #a8a29e;
+}

@@ -5,14 +5,18 @@ import { CheckCircle, Copy } from 'lucide-react';
 import styles from '@/app/styles/PixPayment.module.css';
 import { PixPaymentResult } from 'pix-payment';
 import { toast } from 'react-toastify';
-import { getPriceFormatado } from '../lib/common';
+import { formatBRL } from './constants';
 
 export default function PixPayment({
   pixData,
   errorMessage,
+  price,
+  quantity,
 }: {
   pixData: PixPaymentResult;
   errorMessage: string;
+  price: number;
+  quantity: number;
 }) {
   const handleCopyPixKey = () => {
     if (pixData.data?.qrCode) {
@@ -48,11 +52,8 @@ export default function PixPayment({
 
       <button onClick={handleCopyPixKey} className={styles.button}>
         <Copy className={styles.icon} />
-        Copiar Chave PIX
-        <span style={{ textDecoration: 'line-through' }}>
-          DE ({getPriceFormatado(process.env.NEXT_PUBLIC_PRECO_DE!)})
-        </span>
-        POR ({getPriceFormatado(process.env.NEXT_PUBLIC_PRECO!)})
+        Copiar Chave PIX — {quantity.toLocaleString('pt-BR')} inscritos por{' '}
+        {formatBRL(price)}
       </button>
 
       <div className={styles.status}>

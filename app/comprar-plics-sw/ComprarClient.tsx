@@ -1,8 +1,11 @@
-//app/comprar-plics-sw/ComprarClient.tsx
-
 'use client';
 
-import { getUserId, savePaymentId, setUserId } from '@/app/lib/userId';
+import {
+  getSavedPaymentId,
+  getUserId,
+  savePaymentId,
+  setUserId,
+} from '@/app/lib/userId';
 import { CheckCircle, Copy, Download } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
@@ -13,9 +16,12 @@ import {
 } from './actions';
 
 import styles from '@/app/styles/comprar.module.css';
+import Image from 'next/image';
 import Link from 'next/link';
+import { PixPaymentResult } from 'pix-payment';
 import FalarComSuporteComponent from '../components/FalarComSuporte';
-import PixPayment from './PixPayment';
+import { UTM } from '../lib/common';
+import PixPaymentHolder from './components/pix-payment-holder';
 
 interface AccessData {
   hasAccess: boolean;
@@ -24,29 +30,43 @@ interface AccessData {
   downloadLinux: string | null;
 }
 
-interface PixData {
-  success: boolean;
-  paymentId?: string;
-  qrCodeBase64?: string | null;
-  qrCode?: string | null;
-  status?: string;
-  error?: string;
-}
-
 export default function ComprarClient({
   testMode,
   initialPaymentId,
   userIdFromUrl,
+  utm,
 }: {
   testMode?: boolean;
   initialPaymentId?: string;
   userIdFromUrl?: string;
+  utm: UTM;
 }) {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
   const [accessData, setAccessData] = useState<AccessData | null>(null);
-  const [pixData, setPixData] = useState<PixData | null>(null);
+  const [pixData, setPixData] = useState<PixPaymentResult | null>(null);
   const [checkingPayment, setCheckingPayment] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300);
+  const [timerExpired, setTimerExpired] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (hasAccess || timerExpired) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setTimerExpired(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [hasAccess, timerExpired]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
 
   useEffect(() => {
     async function checkAccess() {
@@ -80,57 +100,18 @@ export default function ComprarClient({
 
         if (initialPaymentId) {
           savePaymentId(initialPaymentId);
-
-          const syncResult = await syncPaymentStatus(
-            initialPaymentId,
-            userId || '',
-          );
-
-          if (syncResult.accessGranted) {
-            savePaymentId(initialPaymentId);
-            window.location.reload();
-            return;
-          }
-
-          if (syncResult.isExpired) {
-            const pixResult = await createPixPayment(
-              userId || 'guest_' + Date.now(),
-            );
-            setPixData(pixResult);
-
-            if (pixResult.paymentId) {
-              savePaymentId(pixResult.paymentId);
-              const url = new URL(window.location.href);
-              url.searchParams.set('paymentId', pixResult.paymentId);
-              window.history.replaceState({}, '', url.toString());
-            }
-          } else {
-            setPixData({
-              success: true,
-              paymentId: initialPaymentId,
-              qrCodeBase64: syncResult.qrCodeBase64 ?? null,
-              qrCode: syncResult.qrCode ?? null,
-              status: syncResult.status || 'pending',
-            });
-          }
+          await loadPayment(initialPaymentId, userId || '');
         } else {
-          const pixResult = await createPixPayment(
-            userId || 'guest_' + Date.now(),
-          );
-          setPixData(pixResult);
-
-          if (pixResult.paymentId) {
-            savePaymentId(pixResult.paymentId);
-            const url = new URL(window.location.href);
-            url.searchParams.set('paymentId', pixResult.paymentId);
-            window.history.replaceState({}, '', url.toString());
+          const savedPaymentId = getSavedPaymentId();
+          if (savedPaymentId) {
+            await loadPayment(savedPaymentId, userId || '');
+          } else {
+            await createNewPayment(userId);
           }
         }
-      } catch (error) {
-        setPixData({
-          success: false,
-          error: error instanceof Error ? error.message : 'Erro inesperado',
-        });
+      } catch (error: any) {
+        setPixData(null);
+        setErrorMessage(error.message);
       } finally {
         setLoading(false);
       }
@@ -140,32 +121,22 @@ export default function ComprarClient({
   }, [testMode, initialPaymentId, userIdFromUrl]);
 
   const handleCheckPayment = async () => {
-    if (!pixData?.paymentId) return;
+    const paymentId = pixData?.data?.paymentId;
+
+    if (!paymentId) return;
 
     setCheckingPayment(true);
     const userId = getUserId();
-    const result = await syncPaymentStatus(pixData.paymentId, userId || '');
+    const result = await syncPaymentStatus(paymentId!, userId || '');
 
     if (result.accessGranted) {
-      savePaymentId(pixData.paymentId);
+      savePaymentId(paymentId!);
       window.location.reload();
       return;
     }
 
     setCheckingPayment(false);
   };
-
-  if (loading) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.wrapper}>
-            <p>Carregando...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (hasAccess && accessData) {
     return (
@@ -254,6 +225,50 @@ export default function ComprarClient({
     );
   }
 
+  async function loadPayment(paymentId: string, userId: string) {
+    const syncResult = await syncPaymentStatus(paymentId, userId);
+
+    if (syncResult.accessGranted) {
+      savePaymentId(paymentId);
+      window.location.reload();
+      return true;
+    }
+
+    if (syncResult.isExpired) {
+      await createNewPayment(userId);
+    } else {
+      setPixData({
+        success: true,
+        error: null,
+        data: {
+          paymentId,
+          qrCodeBase64: syncResult.qrCodeBase64 ?? null,
+          qrCode: syncResult.qrCode ?? null,
+          status: syncResult.status || 'pending',
+        },
+      });
+    }
+
+    return false;
+  }
+
+  async function createNewPayment(userId: string | null) {
+    const pixResult = await createPixPayment(
+      userId || `guest_${Date.now()}`,
+      utm,
+    );
+    setPixData(pixResult);
+
+    const paymentId = pixResult.data?.paymentId;
+    if (paymentId) {
+      savePaymentId(paymentId);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('paymentId', paymentId);
+      window.history.replaceState({}, '', url.toString());
+    }
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.bgOrb1} />
@@ -272,19 +287,93 @@ export default function ComprarClient({
         </div>
 
         <div className={styles.wrapper}>
-          {pixData && <PixPayment pixData={pixData} />}
+          {!timerExpired && (
+            <div className={styles.urgencyCard}>
+              <div className={styles.urgencyTimer}>
+                <span className={styles.urgencyTimerLabel}>
+                  Oferta expira em
+                </span>
+                <span className={styles.urgencyTimerValue}>
+                  {String(minutes).padStart(2, '0')}:
+                  {String(seconds).padStart(2, '0')}
+                </span>
+              </div>
 
-          {pixData?.paymentId && (
-            <button
-              onClick={handleCheckPayment}
-              disabled={checkingPayment}
-              style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}
-            >
-              {checkingPayment
-                ? 'Verificando...'
-                : 'Já paguei! Verificar pagamento'}
-            </button>
+              <div className={styles.urgencyContent}>
+                <div className={styles.urgencyImageWrap}>
+                  <Image
+                    src='/banner_vertical_anuncio.png'
+                    width={380}
+                    height={676}
+                    alt='Banner Plics SW'
+                    className={styles.urgencyImage}
+                  />
+                </div>
+
+                <div className={styles.urgencyTextContent}>
+                  <p className={styles.urgencyHeadline}>
+                    🚨{' '}
+                    <strong>
+                      Seu concorrente já sabe exatamente o que tem em estoque. E
+                      você?
+                    </strong>
+                  </p>
+
+                  <p className={styles.urgencyBody}>
+                    Enquanto você perde tempo procurando produtos, conferindo
+                    preços manualmente e corrigindo erros de cadastro, outros
+                    negócios estão vendendo mais e atendendo melhor.
+                  </p>
+
+                  <p className={styles.urgencyBody}>
+                    Cada produto sem cadastro, preço errado ou estoque
+                    desatualizado significa dinheiro saindo do seu bolso.
+                  </p>
+
+                  <p className={styles.urgencyBody}>
+                    Com o <strong>Plics SW</strong>, você cadastra seus produtos
+                    de forma rápida e organizada, controla o estoque em tempo
+                    real e mantém todas as informações do seu negócio em um só
+                    lugar.
+                  </p>
+
+                  <ul className={styles.urgencyList}>
+                    <li>✅ Cadastro completo de produtos</li>
+                    <li>✅ Controle de estoque simplificado</li>
+                    <li>✅ Organização de categorias e preços</li>
+                    <li>✅ Menos erros e mais produtividade</li>
+                    <li>✅ Compra única, sem mensalidades</li>
+                  </ul>
+
+                  <p className={styles.urgencyBody}>
+                    <strong>Não fique para trás.</strong>
+                  </p>
+
+                  <p className={styles.urgencyBody}>
+                    Quem organiza melhor o negócio toma decisões mais rápidas,
+                    atende melhor os clientes e vende mais.
+                  </p>
+
+                  <p className={styles.urgencyFooter}>
+                    🔥 Comece hoje mesmo a profissionalizar sua gestão com o
+                    Plics SW.
+                  </p>
+
+                  <p className={styles.urgencyTagline}>
+                    Plics SW — Menos planilhas. Mais controle. Mais resultados.
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
+
+          <PixPaymentHolder
+            loading={loading}
+            pixData={pixData}
+            handleCheckPayment={handleCheckPayment}
+            checkingPayment={checkingPayment}
+            errorMessage={errorMessage}
+          />
 
           <FalarComSuporteComponent />
         </div>

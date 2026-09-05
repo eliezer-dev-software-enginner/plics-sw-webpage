@@ -11,6 +11,7 @@ model Payment {
   id        String   @id
   userId    String   @map("user_id")
   status    String
+  product   String   @default("plics-sw")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -24,4 +25,22 @@ model UserPurchase {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("user_purchases")
+}
+
+model InstagramFollowersOrder {
+  id            Int      @id @default(autoincrement())
+  paymentId     String   @unique @map("payment_id")
+  userId        String   @map("user_id")
+  instagramLink String   @map("instagram_link")
+  quantity      Int
+  amount        Float
+  status        String   @default("pending") @map("status")
+  testMode      Boolean  @default(false) @map("test_mode")
+  smmOrderId    String?  @map("smm_order_id")
+  smmStatus     String?  @map("smm_status")
+  fulfillError  String?  @map("fulfill_error")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("instagram_followers_orders")
 }

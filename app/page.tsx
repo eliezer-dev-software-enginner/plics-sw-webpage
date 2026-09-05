@@ -1,22 +1,60 @@
-import { CheckCircle, Shield, WifiOff } from "lucide-react";
+import {
+  BarChart3,
+  CheckCircle,
+  Database,
+  Headphones,
+  Package,
+  Shield,
+  User,
+  WifiOff,
+  Zap,
+} from 'lucide-react';
+import {
+  getPriceFormatado,
+  getPriceFormatadoArray,
+  getUtmFromSearchParams,
+} from './lib/common';
 
-import { ComprarButton } from "@/app/components/ComprarButton";
-import Image from "next/image";
-import style from "@/app/styles/Home.module.css";
-import { SuporteButton } from "./components/SuporteButton";
+import { ComprarButton } from '@/app/components/ComprarButton';
+import { DownloadApp } from '@/app/components/DownloadApp';
+import { Header } from '@/app/components/Header';
+import { InstagramComprarButton } from '@/app/components/InstagramComprarButton';
+import { InstagramFollowersPopup } from '@/app/components/InstagramFollowersPopup';
+import { FOLLOWERS_TIERS, formatBRL } from '@/app/comprar-inscritos-instagram/constants';
+import style from '@/app/styles/Home.module.css';
+import Image from 'next/image';
+import { SuporteButton } from './components/SuporteButton';
 
-export default function App() {
+export default async function App({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const utm = getUtmFromSearchParams(params);
+
   return (
     <div className={style.container}>
       {/* Grain overlay */}
-      <div className={style.grain} aria-hidden="true" />
+      <div className={style.grain} aria-hidden='true' />
+      <span className='verificador' style={{ display: 'none' }}>
+        {process.env.VERIFICADOR}
+      </span>
+
+      <InstagramFollowersPopup utm={utm} />
+
+      <Header />
 
       <main>
         {/* ── Hero ─────────────────────────────────── */}
         <section className={style.hero}>
-          <div className={style.heroBg} aria-hidden="true">
+          <div className={style.heroBg} aria-hidden='true'>
             <div className={style.heroBgGlow} />
-            <div className={style.heroBgGrid} />
           </div>
 
           <div className={style.heroInner}>
@@ -40,7 +78,7 @@ export default function App() {
             </p>
 
             <div className={style.heroCta}>
-              <ComprarButton variant="primary" />
+              <ComprarButton variant='primary' utm={utm} />
               <SuporteButton />
               <div className={style.heroMeta}>
                 <span>✓ Entrega imediata</span>
@@ -57,18 +95,21 @@ export default function App() {
                   <span />
                 </div>
                 <Image
-                  src="/plics-sw-home.png"
+                  src='/plics-sw-home.png'
                   width={1000}
                   height={560}
-                  alt="Interface do Sistema Plics-SW Dashboard"
+                  alt='Interface do Sistema Plics-SW Dashboard'
                   className={style.dashboardImg}
                   priority
                 />
               </div>
-              <div className={style.dashboardGlow} aria-hidden="true" />
+              <div className={style.dashboardGlow} aria-hidden='true' />
             </div>
           </div>
         </section>
+
+        {/* ── Download livre ──────────────────────────── */}
+        <DownloadApp />
 
         {/* ── Vantagens ────────────────────────────── */}
         <section className={style.features}>
@@ -103,7 +144,7 @@ export default function App() {
                   Esqueça assinaturas e cobranças mensais. Você paga uma vez e o
                   sistema é seu para sempre — sem pegadinha.
                 </p>
-                <div className={style.featureCardGlow} aria-hidden="true" />
+                <div className={style.featureCardGlow} aria-hidden='true' />
               </div>
 
               <div className={style.featureCard}>
@@ -132,20 +173,132 @@ export default function App() {
               serviços! E amamos receber os pequenos e novos negócios.
             </p>
 
-            <Image
-              src="/mulher-usando-pdv.png"
-              width={1000}
-              height={560}
-              alt="Interface do Sistema Plics-SW Dashboard"
-              className={style.dashboardImg}
-              priority
-            />
+            <div className={style.versatilidadeCard}>
+              <div className={style.versatilidadeCardFrame}>
+                <div className={style.dashboardBar}>
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <Image
+                  src='/mulher-usando-pdv.png'
+                  width={1000}
+                  height={560}
+                  alt='Interface do Sistema Plics-SW Dashboard'
+                  className={style.dashboardImg}
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Benefícios ──────────────────────────── */}
+        <section className={style.benefits}>
+          <div className={style.benefitsInner}>
+            <h2 className={style.benefitsTitle}>
+              Conte com o PLICs SW para fazer a{' '}
+              <span className={style.heroAccent}>gestão completa</span>
+              <br />
+              do seu negócio
+            </h2>
+            <p className={style.benefitsSubtitle}>
+              Automatize processos e ganhe tempo para focar no crescimento do
+              seu negócio.
+            </p>
+
+            <div className={style.benefitsGrid}>
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Zap size={22} />
+                </div>
+                <h3>Fácil de usar</h3>
+                <p>
+                  Faça a gestão do seu negócio com uma plataforma simples de
+                  usar.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Package size={22} />
+                </div>
+                <h3>Controle de Estoque</h3>
+                <p>
+                  Controle de estoque integrado e automatizado para otimizar
+                  suas operações.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Headphones size={22} />
+                </div>
+                <h3>Suporte Completo</h3>
+                <p>
+                  Conte com nosso suporte para te apoiar em todos os momentos.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <CheckCircle size={22} />
+                </div>
+                <h3>Gestão Completa</h3>
+                <p>
+                  Vendas, compras, estoque e financeiro integrados em um só
+                  lugar.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <Database size={22} />
+                </div>
+                <h3>Informações Integradas</h3>
+                <p>
+                  Todas as informações do seu negócio organizadas em um só
+                  lugar, sem planilhas.
+                </p>
+              </div>
+
+              <div className={style.benefitCard}>
+                <div className={style.benefitIconWrap}>
+                  <BarChart3 size={22} />
+                </div>
+                <h3>Decisões Melhores</h3>
+                <p>
+                  Relatórios que te ajudam a ter uma visão analítica consolidada
+                  do seu negócio.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Playlist tutoriais YouTube ─────────────── */}
+        <section className={style.ytbBanner}>
+          <div className={style.ytbBannerInner}>
+            <a
+              href='https://youtube.com/playlist?list=PLG06evrpS2RlBbxDBYcDkVKpWrEoSy8tq&si=XuQaWse78EawLMBd'
+              target='_blank'
+              rel='noopener noreferrer'
+              className={style.ytbBannerLink}
+            >
+              <Image
+                src='/banner_convite_playlist_ytb.png'
+                width={1983}
+                height={793}
+                alt='Assista à playlist completa de tutoriais do Plics SW no YouTube'
+                className={style.ytbBannerImage}
+              />
+            </a>
           </div>
         </section>
 
         {/* ── Preço ────────────────────────────────── */}
         <section className={style.pricing}>
-          <div className={style.pricingBg} aria-hidden="true" />
+          <div className={style.pricingBg} aria-hidden='true' />
           <div className={style.pricingInner}>
             <div className={style.pricingLeft}>
               <div className={style.pricingLabel}>Oferta de lançamento</div>
@@ -177,19 +330,133 @@ export default function App() {
 
             <div className={style.pricingCard}>
               <div className={style.pricingCardInner}>
-                <span className={style.oldPrice}>De R$ 87,99</span>
+                <span className={style.oldPrice}>
+                  De {getPriceFormatado(process.env.NEXT_PUBLIC_PRECO_DE!)}
+                </span>
                 <div className={style.newPriceWrap}>
                   <span className={style.currency}>R$</span>
-                  <span className={style.newPrice}>34</span>
-                  <span className={style.cents}>,50</span>
+                  <span className={style.newPrice}>
+                    {getPriceFormatadoArray(process.env.NEXT_PUBLIC_PRECO!)[0]}
+                  </span>
+                  <span className={style.cents}>
+                    {getPriceFormatadoArray(process.env.NEXT_PUBLIC_PRECO!)[1]}
+                  </span>
                 </div>
                 <p className={style.priceNote}>pagamento único · via PIX</p>
-                <ComprarButton variant="accent" />
+                <ComprarButton variant='accent' utm={utm} />
                 <p className={style.priceSecurity}>
                   🔒 Pagamento seguro · Licença entregue na hora
                 </p>
               </div>
-              <div className={style.pricingCardGlow} aria-hidden="true" />
+              <div className={style.pricingCardGlow} aria-hidden='true' />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Instagram cross-sell ─────────────────── */}
+        <section className={style.instagram}>
+          <div className={style.instagramInner}>
+            <div className={style.instagramImageWrap}>
+              <Image
+                src='/instagram-comprar-inscritos.png'
+                width={600}
+                height={600}
+                alt='Compre inscritos para Instagram'
+                className={style.instagramImage}
+              />
+            </div>
+
+            <div>
+              <div className={style.instagramLabel}>Novidade</div>
+              <h2 className={style.instagramTitle}>
+                Compre inscritos para o seu Instagram
+              </h2>
+              <p className={style.instagramText}>
+                Aumente a credibilidade do seu perfil com entrega gradual e
+                segura, pagando via PIX. Sem senha, sem assinatura.
+              </p>
+
+              <ul className={style.instagramPriceList}>
+                {FOLLOWERS_TIERS.map((tier) => (
+                  <li key={tier.quantity}>
+                    <span className={style.instagramPriceQuantity}>
+                      {tier.quantity.toLocaleString('pt-BR')} inscritos
+                    </span>
+                    <span className={style.instagramPriceValue}>
+                      {formatBRL(tier.price)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <InstagramComprarButton utm={utm} />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Depoimentos ──────────────────────────── */}
+        <section className={style.testimonials}>
+          <div className={style.testimonialsInner}>
+            <div className={style.featuresSectionLabel}>Depoimentos</div>
+            <h2 className={style.featuresTitle}>O que nossos clientes dizem</h2>
+
+            <div className={style.testimonialGrid}>
+              <div className={style.testimonialCard}>
+                <div className={style.testimonialCardImg}>
+                  <User size={32} />
+                </div>
+                <div className={style.testimonialQuote} aria-hidden='true'>
+                  &ldquo;
+                </div>
+                <p className={style.testimonialText}>
+                  O PLICs SW transformou a gestão da minha loja. Agora tenho
+                  controle total do estoque e das vendas, tudo offline e sem
+                  complicação.
+                </p>
+                <div className={style.testimonialAuthor}>
+                  <strong>Ana Silva</strong>
+                  <span>Proprietária da BS Store</span>
+                </div>
+              </div>
+
+              <div
+                className={`${style.testimonialCard} ${style.testimonialCardHighlight}`}
+              >
+                <div className={style.testimonialCardImg}>
+                  <User size={32} />
+                </div>
+                <div className={style.testimonialQuote} aria-hidden='true'>
+                  &ldquo;
+                </div>
+                <p className={style.testimonialText}>
+                  Paguei uma vez e uso para sempre. Melhor investimento que fiz
+                  para meu negócio. O suporte é rápido e sempre me ajudam quando
+                  preciso.
+                </p>
+                <div className={style.testimonialAuthor}>
+                  <strong>Carlos Oliveira</strong>
+                  <span>Fundador da OFC Materiais</span>
+                </div>
+                <div className={style.testimonialCardGlow} aria-hidden='true' />
+              </div>
+
+              <div className={style.testimonialCard}>
+                <div className={style.testimonialCardImg}>
+                  <User size={32} />
+                </div>
+                <div className={style.testimonialQuote} aria-hidden='true'>
+                  &ldquo;
+                </div>
+                <p className={style.testimonialText}>
+                  Finalmente um sistema simples de usar que não precisa de
+                  internet. Atendo meus clientes na loja e em feiras sem
+                  preocupação.
+                </p>
+                <div className={style.testimonialAuthor}>
+                  <strong>Juliana Costa</strong>
+                  <span>Floricultura Primavera</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>

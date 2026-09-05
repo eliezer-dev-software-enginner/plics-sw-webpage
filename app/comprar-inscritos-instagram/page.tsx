@@ -1,16 +1,15 @@
-//app/comprar-plics-sw/page.tsx
+//app/comprar-inscritos-instagram/page.tsx
 
 import { getUtmFromSearchParams } from '../lib/common';
 import ComprarClient from './ComprarClient';
 
 export const dynamic = 'force-dynamic';
 
-export default async function Comprar({
+export default async function ComprarInscritosInstagram({
   searchParams,
 }: {
   searchParams: Promise<{
     userId?: string;
-    test?: string;
     paymentId?: string;
     utm_source?: string;
     utm_medium?: string;
@@ -20,7 +19,6 @@ export default async function Comprar({
 }) {
   const params = await searchParams;
 
-  const testMode = params.test === 'success';
   const userIdFromUrl = params.userId;
   const initialPaymentId = params.paymentId;
 
@@ -28,7 +26,6 @@ export default async function Comprar({
 
   return (
     <ComprarClient
-      testMode={testMode}
       initialPaymentId={initialPaymentId}
       userIdFromUrl={userIdFromUrl}
       utm={utm}

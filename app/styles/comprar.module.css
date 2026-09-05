@@ -45,7 +45,7 @@
 .content {
   position: relative;
   z-index: 1;
-  max-width: 560px;
+  max-width: 920px;
   margin: 0 auto;
   padding: 5rem 1.5rem 4rem;
 }
@@ -134,6 +134,146 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* ===========================
+   Urgency
+=========================== */
+.urgencyCard {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  animation: urgencyPulse 2s ease-in-out infinite;
+}
+
+.urgencyContent {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 600px) {
+  .urgencyContent {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.urgencyImageWrap {
+  flex-shrink: 0;
+  width: 380px;
+}
+
+@media (max-width: 600px) {
+  .urgencyImageWrap {
+    width: 140px;
+  }
+}
+
+.urgencyImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.urgencyTextContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@keyframes urgencyPulse {
+  0%, 100% {
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+}
+
+.urgencyTimer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.urgencyTimerLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fca5a5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.urgencyTimerValue {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #ef4444;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.urgencyHeadline {
+  font-size: 0.85rem;
+  color: #fca5a5;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.urgencyHeadline strong {
+  color: #fef2f2;
+}
+
+.urgencyBody {
+  font-size: 0.82rem;
+  color: #fca5a5;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.urgencyBody strong {
+  color: #fef2f2;
+}
+
+.urgencyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.urgencyList li {
+  font-size: 0.82rem;
+  color: #fca5a5;
+  line-height: 1.4;
+}
+
+.urgencyFooter {
+  font-size: 0.88rem;
+  color: #fbbf24;
+  line-height: 1.5;
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}
+
+.urgencyTagline {
+  font-size: 0.85rem;
+  color: #fef2f2;
+  line-height: 1.5;
+  margin: 0.25rem 0 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 /* ===========================
