@@ -7,8 +7,9 @@ export function SuporteButton() {
  
 
   const handleClick = () => {
-   
-    //TODO: REDIRECT TO LINK: process.env.NEXT_PUBLIC_SUPORTE_CONTATO!
+    const link = process.env.NEXT_PUBLIC_SUPORTE_CONTATO;
+    if (!link) return;
+    window.open(link, '_blank');
   };
 
   const baseStyle = {
