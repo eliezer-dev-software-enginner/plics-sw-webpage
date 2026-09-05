@@ -37,7 +37,7 @@ export function InstagramComprarButton({ utm }: { utm: UTM }) {
       onClick={handleClick}
     >
       <Instagram size={18} />
-      Comprar inscritos agora
+      Impulsionar minha página agora
     </button>
   );
 }

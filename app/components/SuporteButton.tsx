@@ -1,15 +1,37 @@
 "use client";
 
-import Link from "next/link";
+import { MessageCircleQuestionMark } from 'lucide-react';
+
 
 export function SuporteButton() {
+ 
+
+  const handleClick = () => {
+   
+    //TODO: REDIRECT TO LINK: process.env.NEXT_PUBLIC_SUPORTE_CONTATO!
+  };
+
+  const baseStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    padding: '1rem 2rem',
+    borderRadius: '0.5rem',
+    fontWeight: 600,
+    fontSize: '1.125rem',
+    cursor: 'pointer',
+    border: 'none',
+    transition: 'transform 200ms, background-color 200ms',
+  };
+
+  const styles = { ...baseStyle, backgroundColor: 'var(--accent)', color: '#000' };
+
   return (
-    <Link
-      href={process.env.NEXT_PUBLIC_SUPORTE_CONTATO!}
-      //className={styles.suporteLink}
-      target="_blank"
-    >
-      Falar com suporte
-    </Link>
+    <button style={styles} onClick={handleClick}>
+        <MessageCircleQuestionMark size={20} />
+       Falar com suporte
+    </button>
   );
 }
+
