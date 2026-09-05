@@ -16,13 +16,12 @@ export function InstagramFollowersPopup({ utm }: { utm: UTM }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (utm.source === 'youtube') return;
     if (localStorage.getItem(DISMISSED_KEY) === 'true') return;
     // Delay pra não cobrir a tela (e o CTA "Começar Agora") no instante em
     // que a página carrega, antes do usuário conseguir clicar em nada.
     const timer = setTimeout(() => setVisible(true), 3500);
     return () => clearTimeout(timer);
-  }, [utm.source]);
+  }, []);
 
   function dismiss() {
     localStorage.setItem(DISMISSED_KEY, 'true');
