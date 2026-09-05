@@ -37,6 +37,7 @@ export default async function App({
 }) {
   const params = await searchParams;
   const utm = getUtmFromSearchParams(params);
+  const isYoutubeSource = utm.source === 'youtube';
 
   return (
     <div className={style.container}>
@@ -46,7 +47,7 @@ export default async function App({
         {process.env.VERIFICADOR}
       </span>
 
-      <InstagramFollowersPopup utm={utm} />
+      {!isYoutubeSource && <InstagramFollowersPopup utm={utm} />}
 
       <Header />
 
@@ -354,7 +355,8 @@ export default async function App({
         </section>
 
         {/* ── Instagram cross-sell ─────────────────── */}
-        <section className={style.instagram}>
+        {!isYoutubeSource && (
+          <section className={style.instagram}>
           <div className={style.instagramInner}>
             <div className={style.instagramImageWrap}>
               <Image
@@ -393,6 +395,7 @@ export default async function App({
             </div>
           </div>
         </section>
+        )}
 
         {/* ── Depoimentos ──────────────────────────── */}
         <section className={style.testimonials}>
