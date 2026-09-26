@@ -1,10 +1,18 @@
 # TODO.md — Tarefas e Próximos Passos
 ## Pendentes
 
+- [ ] Remover o redirect 308 de `/comprar-inscritos-instagram` depois que os anúncios/links antigos saírem do ar
+- [ ] Considerar URL curta ainda menor para o YouTube (ex.: `/instagram` ou uma vanity URL no domínio)
+- [ ] Decidir se a Política de Privacidade também entra no nav do `<Header />` (hoje só no footer)
 - [ ] (Futuro) Migrar dependência local para pacote GitHub
 - [ ] Ajustar webhook default do emulador (`/api/checkout/webhook` → `/api/webhook`) se necessário
 
 ## Concluídas
+
+- [x] Renomear rota `/comprar-inscritos-instagram` → `/impulsionar-instagram` (com redirect 308 da URL antiga)
+- [x] Criar `app/sitemap.ts` e `app/robots.ts` (Metadata Routes) + `getBaseUrl()` em `lib/common.ts`
+- [x] Criar rota `/politica-de-privacidade` (texto da política em `constants.ts` + CSS Module próprio)
+- [x] Adicionar link da Política de Privacidade no footer global
 
 - [x] Verificar paymentId do localStorage ao acessar tela de pagamento (se expirado, gera novo)
 - [x] Adicionar seção "Benefícios" na LandingPage com conteúdo inspirado no bling.com.br
