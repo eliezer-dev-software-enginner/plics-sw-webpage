@@ -5,6 +5,7 @@ import './globals.css';
 import { Montserrat } from 'next/font/google';
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import Script from 'next/script';
 import { ToastContainer } from 'react-toastify';
 import GoogleAnalytcs from './components/GoogleAnalytcs';
@@ -75,6 +76,14 @@ export default function RootLayout({
           }}
         >
           <p>&copy; 2026 PLICS. Todos os direitos reservados.</p>
+          <p style={{ marginTop: '0.5rem' }}>
+            <Link
+              href='/politica-de-privacidade'
+              style={{ color: 'var(--accent)' }}
+            >
+              Política de Privacidade
+            </Link>
+          </p>
           {process.env.SUPORTE_CONTATO && (
             <p style={{ marginTop: '0.5rem' }}>
               Suporte:{' '}
