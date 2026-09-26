@@ -2,7 +2,7 @@
 
 import PixPayment from '../PixPayment';
 import { PixPaymentResult } from 'pix-payment';
-import styles from '@/app/styles/comprarInstagram.module.css';
+import styles from '@/app/styles/impulsionarInstagram.module.css';
 
 export default function PixPaymentHolder(props: {
   loading: boolean;

@@ -1,4 +1,4 @@
-// app/comprar-inscritos-instagram/constants.ts
+// app/impulsionar-instagram/constants.ts
 
 export type FollowersTier = {
   quantity: number;

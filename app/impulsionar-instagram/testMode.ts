@@ -1,4 +1,4 @@
-// app/comprar-inscritos-instagram/testMode.ts
+// app/impulsionar-instagram/testMode.ts
 //
 // Modo de teste ativado manualmente pelo console do navegador — digite
 // `habilitarTeste()` (ou `desabilitarTeste()`) no devtools. Enquanto ativo,

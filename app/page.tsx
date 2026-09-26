@@ -20,7 +20,7 @@ import { DownloadApp } from '@/app/components/DownloadApp';
 import { Header } from '@/app/components/Header';
 import { InstagramComprarButton } from '@/app/components/InstagramComprarButton';
 import { InstagramFollowersPopup } from '@/app/components/InstagramFollowersPopup';
-import { FOLLOWERS_TIERS, formatBRL } from '@/app/comprar-inscritos-instagram/constants';
+import { FOLLOWERS_TIERS, formatBRL } from '@/app/impulsionar-instagram/constants';
 import style from '@/app/styles/Home.module.css';
 import Image from 'next/image';
 import { SuporteButton } from './components/SuporteButton';

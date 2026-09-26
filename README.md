@@ -42,13 +42,13 @@ LINUX:
 
 cd /home/eliezer/Desktop/dev/pix-emulator-mercado-pago
 
-## Modo de teste — Comprar inscritos Instagram
+## Modo de teste — Impulsionar Instagram
 
-A página `/comprar-inscritos-instagram` integra com o painel SMM real (smmoficial.com) para
+A página `/impulsionar-instagram` integra com o painel SMM real (smmoficial.com) para
 entregar os pedidos após o pagamento. Para testar o fluxo sem criar pedidos reais (sem gastar
 dinheiro no painel):
 
-1. Abra a página `/comprar-inscritos-instagram` no navegador.
+1. Abra a página `/impulsionar-instagram` no navegador.
 2. Abra o console do DevTools e digite:
    ```js
    habilitarTeste()

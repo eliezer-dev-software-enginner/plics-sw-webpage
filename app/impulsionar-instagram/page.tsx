@@ -1,4 +1,4 @@
-//app/comprar-inscritos-instagram/page.tsx
+//app/impulsionar-instagram/page.tsx
 
 import { getUtmFromSearchParams } from '../lib/common';
 import ComprarClient from './ComprarClient';

@@ -1,7 +1,7 @@
 // app/lib/smmApiMock.ts
 //
 // Substitui smmApi.ts quando o pedido está em modo de teste (ver
-// app/comprar-inscritos-instagram/testMode.ts) — nenhuma chamada de rede é feita
+// app/impulsionar-instagram/testMode.ts) — nenhuma chamada de rede é feita
 // ao painel smmoficial.com, então nenhum pedido real é criado nem cobrado.
 
 export async function mockSmmOrder(

@@ -1,4 +1,4 @@
-// app/comprar-inscritos-instagram/actions.ts
+// app/impulsionar-instagram/actions.ts
 
 'use server';
 
@@ -12,7 +12,7 @@ import { getPixService } from '@/app/lib/pixConfig';
 import { fulfillInstagramFollowersOrder } from '@/app/lib/smmFulfillment';
 import { smmStatus } from '@/app/lib/smmApi';
 import { mockSmmStatus } from '@/app/lib/smmApiMock';
-import { UTM } from '../lib/common';
+import { getBaseUrl, UTM } from '../lib/common';
 import { getTierByQuantity } from './constants';
 
 export async function createInstagramFollowersPixPayment(
@@ -51,7 +51,7 @@ export async function createInstagramFollowersPixPayment(
       firstName: 'Cliente',
       lastName: 'Instagram',
       externalRef,
-      notificationUrl: `${process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')}/api/webhook`,
+      notificationUrl: `${getBaseUrl()}/api/webhook`,
     });
 
     if (!result.success || !result.data) {

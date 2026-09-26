@@ -11,7 +11,7 @@ import {
 } from './actions';
 
 import type { InstagramFollowersOrder } from '@prisma/client';
-import styles from '@/app/styles/comprarInstagram.module.css';
+import styles from '@/app/styles/impulsionarInstagram.module.css';
 import Image from 'next/image';
 import { PixPaymentResult } from 'pix-payment';
 import { toast } from 'react-toastify';
