@@ -25,6 +25,10 @@ import style from '@/app/styles/Home.module.css';
 import Image from 'next/image';
 import { SuporteButton } from './components/SuporteButton';
 
+// Por enquanto, oculta o popup e os banners/anúncios de Instagram
+// (impulsionamento). Troque para false para reexibi-los.
+const OCULTAR_PROMO_INSTAGRAM = true;
+
 export default async function App({
   searchParams,
 }: {
@@ -46,7 +50,7 @@ export default async function App({
         {process.env.VERIFICADOR}
       </span>
 
-      <InstagramFollowersPopup utm={utm} />
+      {!OCULTAR_PROMO_INSTAGRAM && <InstagramFollowersPopup utm={utm} />}
 
       <Header />
 
@@ -354,7 +358,8 @@ export default async function App({
         </section>
 
         {/* ── Instagram cross-sell ─────────────────── */}
-        <section className={style.instagram}>
+        {!OCULTAR_PROMO_INSTAGRAM && (
+          <section className={style.instagram}>
           <div className={style.instagramInner}>
             <div className={style.instagramImageWrap}>
               <Image
@@ -393,6 +398,7 @@ export default async function App({
             </div>
           </div>
         </section>
+        )}
 
         {/* ── Depoimentos ──────────────────────────── */}
         <section className={style.testimonials}>

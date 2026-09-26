@@ -10,5 +10,7 @@
     "**/.symlinks": true,
     "**/.plugin_symlinks": true,
     "**/node_modules": false
-  }
+  },
+  "totvsLanguageServer.welcomePage": false,
+  "totvsLanguageServer.editor.linter.includes": "C:\\Users\\Eliezer Dev Seller\\Desktop\\dev\\totvs\\protheus-estudos\\#3-api\\include"
 }

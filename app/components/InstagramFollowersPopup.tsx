@@ -69,7 +69,7 @@ export function InstagramFollowersPopup({ utm }: { utm: UTM }) {
             Novidade
           </span>
           <h2 className={styles.title}>
-            Agora dá pra comprar inscritos para o Instagram
+            Agora dá pra impulsionar seu Instagram
           </h2>
         </div>
 
@@ -94,7 +94,7 @@ export function InstagramFollowersPopup({ utm }: { utm: UTM }) {
 
           <button type='button' className={styles.ctaButton} onClick={handleGo}>
             <Instagram size={18} />
-            Comprar inscritos agora
+            Impulsionar página agora
           </button>
 
           <button type='button' className={styles.dismissLink} onClick={dismiss}>
