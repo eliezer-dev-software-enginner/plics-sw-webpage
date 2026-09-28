@@ -357,6 +357,42 @@ export default async function App({
           </div>
         </section>
 
+        {/* ── Fundador ─────────────────────────────── */}
+        <section className={style.founder} aria-labelledby='founder-title'>
+          <div className={style.founderInner}>
+            <div className={style.founderPhotoWrap}>
+              <Image
+                src='/eliezer-dev.jpg'
+                fill
+                sizes='(max-width: 700px) 190px, 270px'
+                alt='Eliezer, fundador e desenvolvedor do Plics SW'
+                className={style.founderPhoto}
+              />
+            </div>
+
+            <div className={style.founderContent}>
+              <div className={style.founderLabel}>Quem está por trás do Plics SW</div>
+              <h2 id='founder-title' className={style.founderTitle}>
+                Olá, eu sou Eliezer.
+              </h2>
+              <p>
+                Sou o fundador e desenvolvedor do Plics SW. Criei o sistema para
+                tornar a gestão empresarial mais fácil, simples e acessível para
+                quem precisa cuidar do próprio negócio todos os dias.
+              </p>
+              <p>
+                Eu coloco a cara a tapa: acompanho o produto, ouço cada cliente e
+                trabalho continuamente para que você tenha uma ferramenta prática
+                em que possa confiar.
+              </p>
+              <div className={style.founderSignature}>
+                <span>Eliezer</span>
+                <small>Fundador e desenvolvedor do Plics SW</small>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Instagram cross-sell ─────────────────── */}
         {!OCULTAR_PROMO_INSTAGRAM && (
           <section className={style.instagram}>
