@@ -1,5 +1,17 @@
 # DECISIONS.md — Decisões Arquiteturais
 
+## 2026-09-29 — Download público pela Microsoft Store na página inicial
+
+**Decisão:** a seção `#baixar` da home passa a exibir um botão público para a página oficial
+do Plics SW na Microsoft Store (`9P20X36J46TM`). O botão abre em nova aba com
+`noopener noreferrer`.
+
+**Motivo:** agora que o aplicativo está publicado na Store, o download do Windows pode ser
+descoberto e instalado diretamente pela vitrine oficial. O fluxo existente de instaladores do
+GitHub com validação de licença é preservado como alternativa para clientes e Linux.
+
+---
+
 ## 001 — Integração com Emulador PIX
 
 **Data:** 2026-06-09
@@ -223,5 +235,4 @@ Renomear a rota `/comprar-inscritos-instagram` para `/impulsionar-instagram` (co
 - `npx tsc --noEmit` limpo; `npm run lint` sem novos problemas (28 pré-existentes, inalterados)
 - `next build` → `ƒ /impulsionar-instagram`
 - `next start` → `GET /comprar-inscritos-instagram?utm_source=youtube` responde **308** com `Location: /impulsionar-instagram?utm_source=youtube`; `GET /impulsionar-instagram` responde **200**
-
 

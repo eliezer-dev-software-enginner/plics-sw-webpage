@@ -112,7 +112,7 @@ export default async function App({
           </div>
         </section>
 
-        {/* ── Download livre ──────────────────────────── */}
+        {/* ── Download mediante licença ───────────────── */}
         <DownloadApp />
 
         {/* ── Vantagens ────────────────────────────── */}

@@ -9,6 +9,8 @@
 
 ## Concluídas
 
+- [x] Liberar na home o download público do Plics SW pela Microsoft Store.
+
 - [x] Renomear rota `/comprar-inscritos-instagram` → `/impulsionar-instagram` (com redirect 308 da URL antiga)
 - [x] Criar `app/sitemap.ts` e `app/robots.ts` (Metadata Routes) + `getBaseUrl()` em `lib/common.ts`
 - [x] Criar rota `/politica-de-privacidade` (texto da política em `constants.ts` + CSS Module próprio)

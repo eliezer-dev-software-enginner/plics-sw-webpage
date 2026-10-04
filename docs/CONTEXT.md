@@ -54,6 +54,12 @@ plics-sw-website/
 
 ## Status Atual
 
+### 2026-09-29: Microsoft Store na home
+
+- `DownloadApp` exibe a opção pública de instalação pela Microsoft Store para Windows.
+- O download de instaladores GitHub protegido por licença foi mantido como alternativa para
+  clientes e Linux.
+
 - **Dev**: `PixService` usa emulador (`pix-emulator-mercado-pago`, `localhost:3001`) — `NODE_ENV === 'development'`
 - **Prod**: `PixService` usa SDK oficial `mercadopago` (token `MP_ACCESS_TOKEN_PROD`)
 - Webhook `/api/webhook` recebe notificações do emulador ou do MP real
