@@ -1,70 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plics SW — site
 
-## Getting Started
+Site comercial do Plics SW, um aplicativo de gestão (ERP) para pequenos e médios negócios. Este repositório contém o **site**, não o código do aplicativo de desktop. A aplicação apresenta o produto, oferece downloads, recebe pagamentos PIX por licenças e inclui uma página para pedidos de impulsionamento no Instagram.
 
-First, run the development server:
+O site usa [Next.js](https://nextjs.org), React e TypeScript. Para conhecer o framework, consulte a [documentação do Next.js](https://nextjs.org/docs) e o tutorial [Learn Next.js](https://nextjs.org/learn). Pagamentos usam `pix-payment` e Mercado Pago; os registros são armazenados em PostgreSQL por meio do Prisma. A página de Instagram também se integra a um painel SMM após a aprovação do pagamento. O pacote está marcado como `private` em `package.json`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Executar localmente
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+É necessário ter Node.js e npm compatíveis com as dependências de `package.json`, além de um banco PostgreSQL acessível. O repositório inclui `package-lock.json` e não inclui um arquivo de exemplo para as variáveis de ambiente.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Instale as dependências na raiz do repositório:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm ci
+   ```
 
-## Learn More
+   A instalação da dependência `pix-payment` requer acesso ao repositório Git indicado em `package.json`.
 
-To learn more about Next.js, take a look at the following resources:
+2. Configure as variáveis necessárias em `.env.local`, sem publicar valores secretos. `PRISMA_URL` é a URL de conexão com o PostgreSQL definida em `prisma/schema.prisma`. `MP_ACCESS_TOKEN_TEST` ou `MP_ACCESS_TOKEN_PROD` é exigido para criar pagamentos. Para o fluxo de compra da licença, configure também `PRECO`; a interface usa `NEXT_PUBLIC_PRECO` e `NEXT_PUBLIC_PRECO_DE` para exibir preços. `NEXT_PUBLIC_APP_URL` define a URL base usada nas notificações de pagamento; sem ela, o código usa `VERCEL_URL` ou `http://localhost:3000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   O desenvolvimento usa o emulador PIX quando `NODE_ENV` é `development`; `PIX_EMULATOR_URL` aponta para esse serviço externo, que **não faz parte deste repositório**. A configuração e o acesso ao emulador precisam ser providenciados separadamente. Para pedidos reais de Instagram, configure `SMM_API_KEY` e `SMM_SERVICE_ID_INSTAGRAM_FOLLOWERS`; `SMM_API_URL` é opcional. Outras variáveis usadas pelo site podem ser localizadas pelas referências a `process.env` no código.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Gere o cliente Prisma e inicie o servidor:
 
-## Deploy on Vercel
+   ```bash
+   npx prisma generate
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   Abra [http://localhost:3000](http://localhost:3000). O esquema do banco está em `prisma/schema.prisma`; este repositório não contém migrações Prisma para criar suas tabelas. Os fluxos que acessam o banco exigem um esquema compatível já preparado.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`npm run build` gera o cliente Prisma e compila o site; `npm run start` inicia a versão compilada. `npm run lint` executa o ESLint. Veja os scripts em `package.json`.
 
-# plics-sw-webpage
+## Páginas e fluxos
 
-EMULADOR:
-LINUX:
+- `/`: apresentação do Plics SW, compra e opções de download.
+- `/comprar-plics-sw`: pagamento PIX da licença e liberação de acesso após aprovação.
+- `/impulsionar-instagram`: seleção de quantidade e perfil, pagamento PIX e acompanhamento do pedido. A rota existe, mas a divulgação do serviço na página inicial está desativada no código.
+- `/atualizacao`: consulta da última versão e downloads disponíveis.
+- `/politica-de-privacidade`: política de privacidade exibida no site.
+- `/api/webhook`: recebimento de notificações de pagamento.
 
-cd /home/eliezer/Desktop/dev/pix-emulator-mercado-pago
+Os downloads de instaladores dependem dos arquivos da última release publicada no GitHub, consultada por `app/lib/githubRelease.ts`.
 
-## Modo de teste — Impulsionar Instagram
+## Modo de teste — impulsionamento no Instagram
 
-A página `/impulsionar-instagram` integra com o painel SMM real (smmoficial.com) para
-entregar os pedidos após o pagamento. Para testar o fluxo sem criar pedidos reais (sem gastar
-dinheiro no painel):
+O modo de teste **simula somente o envio e a consulta do pedido ao painel SMM**. A criação e a confirmação do pagamento PIX ainda passam pelo serviço configurado em `app/lib/pixConfig.ts`; portanto, use um ambiente de pagamento de teste apropriado antes de percorrer o fluxo.
 
-1. Abra a página `/impulsionar-instagram` no navegador.
-2. Abra o console do DevTools e digite:
+1. Abra `/impulsionar-instagram` no navegador e execute no console do DevTools:
+
    ```js
    habilitarTeste()
    ```
-   A página recarrega e um badge amarelo "🧪 MODO TESTE" aparece fixo no canto da tela.
-3. Complete o fluxo normalmente (seleção de quantidade, link do Instagram, pagamento PIX). O
-   pedido é salvo com `testMode: true` e, ao ser aprovado, o pedido ao painel SMM é **simulado**
-   (`app/lib/smmApiMock.ts`) — nenhuma requisição real é feita a smmoficial.com. O `smmOrderId`
-   fica como `TEST-<timestamp>` e o status simulado evolui de "In progress" para "Completed" após
-   ~30s.
-4. Para desativar o modo de teste:
+
+   A página recarrega e exibe o indicador `🧪 MODO TESTE`.
+2. Escolha a quantidade, informe o perfil e conclua o fluxo PIX no ambiente configurado. O pedido é salvo com `testMode: true` no banco. Quando o pagamento é aprovado, `app/lib/smmApiMock.ts` substitui a chamada ao painel SMM. O identificador do pedido começa com `TEST-`; a consulta simulada retorna `In progress` e, após cerca de 30 segundos, `Completed`.
+3. Para desativar o modo, execute:
+
    ```js
    desabilitarTeste()
    ```
 
-O flag fica salvo no `localStorage` do navegador (`plics_ig_test_mode`), então continua ativo
-entre recarregamentos até ser desligado manualmente. Já o `testMode` de cada pedido é persistido
-no banco (`InstagramFollowersOrder.testMode`), então o fulfillment simulado funciona corretamente
-mesmo quando disparado pelo webhook do Mercado Pago (que não tem acesso ao `localStorage`).
+A opção fica no `localStorage` do navegador (`plics_ig_test_mode`) até ser desativada. O estado de cada pedido também é persistido em `InstagramFollowersOrder.testMode`, permitindo que o webhook use a simulação quando processar um pagamento aprovado.
+
+## Licença
+
+Não há arquivo de licença neste repositório. As condições de uso e redistribuição do código precisam ser definidas pelos responsáveis pelo projeto.
